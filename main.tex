@@ -1,5 +1,4 @@
-\documentclass[color]{tudbook}
-\usepackage{tudthesis}{}
+\documentclass[color]{tudscrreprt}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage[T1]{fontenc}
@@ -7,20 +6,26 @@
 \usepackage{graphicx}
 \graphicspath{ {images/} }
 
+\include{commands}
+
 \let\linksbuendig=\raggedright
 \let\raggedright=\relax
 
 \begin{document}
-\thesis{Gro\ss er Beleg}
+
+\faculty{Factuly of Computer Science}
+\department{Department of Artificial Intelligence}
+\institute{Institute of Computer Vision}
+\date{\today}
 \author{Florian Blume}
-\moreauthor{Mat.-Nr.: 3924990}
-\title{Deep Learning}
-\einrichtung{Faculty of Computer Science}
-\institut{Institute for Artificial Intelligence}
-\professur{Computer Vision}
-\supervisor{Prof. }
-\supervisorII{Dipl.}
-\submitdate{27. Januar 2008}
+\title{%
+  Development of a CNN-aided tool to annotate images with 3D models
+}
+\thesis{Gro\ss er Beleg}
+\dateofbirth{12.08.1991}
+\placeofbirth{Karlsruhe}
+\defensedate{Not yet}
+\referee{Eric Brachmann}
 \maketitle
 
 \begin{abstract}
