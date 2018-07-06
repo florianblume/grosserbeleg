@@ -32,6 +32,16 @@ Keypoint based method
  keywords = {image matching, invariant features, object recognition, scale invariance},
 }
 
+@article{imagenet,
+author = {Krizhevsky, Alex and Sutskever, Ilya and E. Hinton, Geoffrey},
+year = {2012},
+month = {01},
+pages = {},
+title = {ImageNet Classification with Deep Convolutional Neural Networks},
+volume = {25},
+booktitle = {Neural Information Processing Systems}
+}
+
 Keypoint based method
 @INPROCEEDINGS{dwagner, 
 author={D. Wagner and G. Reitmayr and A. Mulloni and T. Drummond and D. Schmalstieg}, 
@@ -298,6 +308,37 @@ doi="10.1007/978-3-319-10605-2_35",
 url="https://doi.org/10.1007/978-3-319-10605-2_35"
 }
 
+@ARTICLE{p3p, 
+author={Xiao-Shan Gao and Xiao-Rong Hou and Jianliang Tang and Hang-Fei Cheng}, 
+journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+title={Complete solution classification for the perspective-three-point problem}, 
+year={2003}, 
+volume={25}, 
+number={8}, 
+pages={930-943}, 
+keywords={computational geometry;computer vision;polynomials;CASSC;P3P equation system;algebraic approach;complete solution classification;geometric approach;perspective-three-point problem;pose estimation;triangular decomposition;zero decomposition algorithm;Algorithm design and analysis;Automatic control;Calibration;Cameras;Equations;Helium;Layout;Robot vision systems;Robotics and automation;Robustness}, 
+doi={10.1109/TPAMI.2003.1217599}, 
+ISSN={0162-8828}, 
+month={Aug},}
+
+@Article{epnp,
+author="Lepetit, Vincent
+and Moreno-Noguer, Francesc
+and Fua, Pascal",
+title="EPnP: An Accurate O(n) Solution to the PnP Problem",
+journal="International Journal of Computer Vision",
+year="2008",
+month="Jul",
+day="19",
+volume="81",
+number="2",
+pages="155",
+abstract="We propose a non-iterative solution to the PnP problem---the estimation of the pose of a calibrated camera from n 3D-to-2D point correspondences---whose computational complexity grows linearly with n. This is in contrast to state-of-the-art methods that are O(n                        5) or even O(n                        8), without being more accurate. Our method is applicable for all n≥4 and handles properly both planar and non-planar configurations. Our central idea is to express the n 3D points as a weighted sum of four virtual control points. The problem then reduces to estimating the coordinates of these control points in the camera referential, which can be done in O(n) time by expressing these coordinates as weighted sum of the eigenvectors of a 12{\texttimes}12 matrix and solving a small constant number of quadratic equations to pick the right weights. Furthermore, if maximal precision is required, the output of the closed-form solution can be used to initialize a Gauss-Newton scheme, which improves accuracy with negligible amount of additional time. The advantages of our method are demonstrated by thorough testing on both synthetic and real-data.",
+issn="1573-1405",
+doi="10.1007/s11263-008-0152-6",
+url="https://doi.org/10.1007/s11263-008-0152-6"
+}
+
 @inproceedings{tsharp,
  author = {Sharp, Toby},
  title = {The Vitruvian Manifold: Inferring Dense Correspondences for One-shot Human Pose Estimation},
@@ -551,6 +592,23 @@ year = {2017}
   bibsource = {dblp computer science bibliography, http://dblp.org}
 }
 
+@article{resnet,
+  author    = {Kaiming He and
+               Xiangyu Zhang and
+               Shaoqing Ren and
+               Jian Sun},
+  title     = {Deep Residual Learning for Image Recognition},
+  journal   = {CoRR},
+  volume    = {abs/1512.03385},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1512.03385},
+  archivePrefix = {arXiv},
+  eprint    = {1512.03385},
+  timestamp = {Wed, 07 Jun 2017 14:41:17 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/HeZRS15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 @article{inceptionv4,
   author    = {Christian Szegedy and
                Sergey Ioffe and
@@ -679,4 +737,97 @@ title = {Active Learning for Human Pose Estimation},
 booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
 month = {Oct},
 year = {2017}
+}
+
+@article{tless,
+  title={{T-LESS}: An {RGB-D} Dataset for {6D} Pose Estimation of Texture-less Objects},
+  author={Hoda{\v{n}}, Tom{\'a}{\v{s}} and Haluza, Pavel and Obdr{\v{z}}{\'a}lek, {\v{S}}t{\v{e}}p{\'a}n and Matas, Ji{\v{r}}{\'\i} and Lourakis, Manolis and Zabulis, Xenophon},
+  journal={IEEE Winter Conference on Applications of Computer Vision (WACV)},
+  year={2017}
+}
+
+@article{kabsch,
+author = {Kabsch W.},
+title = {A solution for the best rotation to relate two sets of vectors},
+journal = {Acta Crystallographica Section A},
+volume = {32},
+number = {5},
+pages = {922-923},
+doi = {10.1107/S0567739476001873},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1107/S0567739476001873},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0567739476001873}
+}
+
+@article{ransac,
+ author = {Fischler, Martin A. and Bolles, Robert C.},
+ title = {Random Sample Consensus: A Paradigm for Model Fitting with Applications to Image Analysis and Automated Cartography},
+ journal = {Commun. ACM},
+ issue_date = {June 1981},
+ volume = {24},
+ number = {6},
+ month = jun,
+ year = {1981},
+ issn = {0001-0782},
+ pages = {381--395},
+ numpages = {15},
+ url = {http://doi.acm.org/10.1145/358669.358692},
+ doi = {10.1145/358669.358692},
+ acmid = {358692},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {automated cartography, camera calibration, image matching, location determination, model fitting, scene analysis}
+} 
+
+@article{opencv,
+    author = {Bradski, G.},
+    citeulike-article-id = {2236121},
+    journal = {Dr. Dobb's Journal of Software Tools},
+    keywords = {bibtex-import},
+    posted-at = {2008-01-15 19:21:54},
+    priority = {4},
+    title = {{The OpenCV Library}},
+    year = {2000}
+}
+
+@misc{opencv_pnp, title={OpenCV: Real Time pose estimation of a textured object}, url={https://docs.opencv.org/trunk/dc/d2c/tutorial_real_time_pose.html}, journal={OpenCV: Image Thresholding}, author={Bradski, G.}, year={2018}, month={Jul}
+}
+
+@INPROCEEDINGS{relu, 
+author={K. Jarrett and K. Kavukcuoglu and M. Ranzato and Y. LeCun}, 
+booktitle={2009 IEEE 12th International Conference on Computer Vision}, 
+title={What is the best multi-stage architecture for object recognition?}, 
+year={2009}, 
+volume={}, 
+number={}, 
+pages={2146-2153}, 
+keywords={feature extraction;object recognition;unsupervised learning;Caltech-101;NORB dataset;feature extraction;feature pooling layer;feature rectification;filter bank;local contrast normalization;multistage architecture;nonlinear transformation;object recognition;supervised learning;unprocessed MNIST dataset;unsupervised learning;Brain modeling;Error analysis;Feature extraction;Filter bank;Gabor filters;Histograms;Image edge detection;Learning systems;Object recognition;Refining}, 
+doi={10.1109/ICCV.2009.5459469}, 
+ISSN={1550-5499}, 
+month={Sept}
+}
+
+@InProceedings{deep_sparse,
+  title = 	 {Deep Sparse Rectifier Neural Networks},
+  author = 	 {Xavier Glorot and Antoine Bordes and Yoshua Bengio},
+  booktitle = 	 {Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics},
+  pages = 	 {315--323},
+  year = 	 {2011},
+  editor = 	 {Geoffrey Gordon and David Dunson and Miroslav Dudík},
+  volume = 	 {15},
+  series = 	 {Proceedings of Machine Learning Research},
+  address = 	 {Fort Lauderdale, FL, USA},
+  month = 	 {11--13 Apr},
+  publisher = 	 {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf},
+  url = 	 {http://proceedings.mlr.press/v15/glorot11a.html}
+}
+
+@unknown{boltzmann,
+author = {Nair, Vinod and E. Hinton, Geoffrey},
+year = {2010},
+month = {06},
+pages = {807-814},
+title = {Rectified Linear Units Improve Restricted Boltzmann Machines Vinod Nair},
+volume = {27},
+booktitle = {Proceedings of ICML}
 }
