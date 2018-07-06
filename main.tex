@@ -3,7 +3,11 @@
 \usepackage{subcaption}
 \usepackage[T1]{fontenc}
 \usepackage[nottoc,numbib]{tocbibind}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{pgfplots}
 \usepackage{url}
 \graphicspath{ {images/} }
 
@@ -20,7 +24,7 @@
 \date{\today}
 \author{Florian Blume}
 \title{%
-  Development of a CNN-aided tool to annotate images with 3D models
+  Development tool to annotate images with 3D models and a neural network for 6D pose estimation
 }
 \thesis{Gro\ss er Beleg}
 \dateofbirth{12.08.1991}
@@ -39,7 +43,7 @@ Here is an abstract.
 \include{background}
 \include{relatedwork}
 \include{program}
-\include{methods}
+\include{network}
 \include{datasets}
 \include{experiments}
 \include{conclusions}
