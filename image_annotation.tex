@@ -42,7 +42,7 @@ The goal of this work is to provide a system to successfully and efficiently ann
 	\begin{subfigure}[t]{0.47\textwidth}
 	\centering
     	\includegraphics[width=0.8\linewidth]{sfb_original}
-    	\caption{An example image from the medical dataset. Taken from TODO: cite.}
+    	\caption{An example image from the medical dataset. Image from TODO: cite.}
     	\label{fig:sfb_original}
 	\end{subfigure}
 	\hfill
@@ -98,7 +98,7 @@ The listed frameworks are all necessary dependencies of the annotation tool. The
 	\begin{subfigure}[t]{0.47\textwidth}
 	\centering
     	\includegraphics[width=0.8\linewidth]{qt_signals_slots}
-    	\caption{The Signals and Slots mechanism of Qt. A class can define signals it can emit, independently of any listeners waiting for that signal. Slots are the functions that, when connected a signal, are called and can thus react to the signal. Image taken from \cite{qt_signals_and_slots}.}
+    	\caption{The Signals and Slots mechanism of Qt. A class can define signals it can emit, independently of any listeners waiting for that signal. Slots are the functions that, when connected a signal, are called and can thus react to the signal. Image from \cite{qt_signals_and_slots}.}
     	\label{fig:qt_signals_slots}
 	\end{subfigure}
 	\caption{Two basic architectural concepts used in 6D-PAT: the model view controller pattern and the signal and slots pattern.}
@@ -208,7 +208,7 @@ The diversity of kinds of dataset is also the reason why the program does not pr
 
 While trying to annotate the medical images dataset it became clear, that proper 3D models are crucial for successful annotation. To temporarily annotate the medical images, 3D surgical tools were downloaded from the internet as a replacement for the missing object models. But having a different shape and also missing the distinctive features of the real objects makes in very difficult to estimate the ground-truth pose. 
 
-It is not clear what the influence of contradicting annotated poses is during training of a network. The author of this work strongly recommends to obtain the correct 3D models before annotating the medical images. The issue of the object models not fitting the segmentation mask can be seen in fig. \ref{fig:sfb_segmentation}. Fig. \ref{fig:sfb_original} shows the actual image and the discrepancy between the models and the pixels belonging to the models. \\
+The influence of contradicting annotated poses during training of a network is not clear. The author of this work strongly recommends to obtain the correct 3D models before annotating the medical images. The issue of the object models not fitting the segmentation mask can be seen in fig. \ref{fig:sfb_segmentation}. Fig. \ref{fig:sfb_original} shows the actual image and the discrepancy between the models and the pixels belonging to the models. \\
 
 Although Python provides C++ bindings the integration of it into the application is quite involved. This is due to the used development environment being more complex than the one needed for a standard C++ console program. Qt's own makefile generator called \textit{qmake} is distributed with Anaconda (for details on Anaconda see chapter \ref{chapter:semi_automatic}). 
 

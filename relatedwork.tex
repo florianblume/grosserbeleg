@@ -39,7 +39,7 @@ The recently developed BB8 \cite{bb8}, which is an abbreviation for the 8 corner
     	\caption{The segmentation preceding the pose estimation.}
     	\label{fig:bb8_segmentation}
 	\end{subfigure}
-	\caption{Example images displaying the functioning of BB8. Images taken from \cite{bb8}.}
+	\caption{Example images displaying the functioning of BB8. Images from \cite{bb8}.}
 \end{figure} 
 \noindent
 Similar to \cite{brachmann1}, the object's position is not predicted directly either, but instead regressed by solving the perspective-n-point problem (PnP) of the correspondences of the corners of the object's bounding box and the projected locations of the corners in the image. The architecture of the first and second net is based on VGG \cite{vgg} respectively but with the last layer cut off and replaced by a fully connected layer which is fine-tuned. 
@@ -70,7 +70,7 @@ The system presented in \cite{ssd-6d} is based on the Single-Shot Multibox Detec
     	\caption{Left image: An example for bounding boxes found by the SSD-6D network. Right image: The most confident views and rotations for those boxes.}
     	\label{fig:ssd6d_detection}
 	\end{subfigure}
-	\caption{Example images displaying the functioning of SSD-6D. Images taken from \cite{ssd-6d}}
+	\caption{Example images displaying the functioning of SSD-6D. Images from \cite{ssd-6d}}
 \end{figure}
 The SSD-inspired network architecture produces feature maps of the input images, that are convolved to predict the class and 2D bounding box (see Figure \ref{fig:ssd6d_detection} left) of objects in the scene. The network also estimates the probability of a discrete viewpoint on the object. Those viewpoints are sampled equidistantly alongside a predefined step size (see Figure \ref{fig:ssd6d_viewpoints}). The pose is calculated taking into account the class, bounding box, viewpoint and a guess on the in-plane rotation of the object. The network is trained entirely on images from the MS COCO dataset \cite{mscoco}. The objects that are to be detected are rendered into them with arbitrary translations and rotations. For each transformation, the network is given the closest discrete viewpoint, in-plane rotation and the tightest bounding box as a regression target.
 \nnewline
@@ -119,7 +119,7 @@ Opposed to retraining from scratch, the network is fine-tuned by an incremental 
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=0.7\linewidth]{fine_tuning}
-	\caption{A candidate (left) and the patches generated sharing the same label. Images taken from \cite{zhou}.}
+	\caption{A candidate (left) and the patches generated sharing the same label. Images from \cite{zhou}.}
 	\label{fig:zhou}
 \end{figure}
 Computer-aided-diagnosis (CAD) systems usually provide a candidate generator, which can quickly produce candidates, including true and false positives, to train with. Through data augmentation the learner can be made more robust to unforeseen situations. For this, numerous patches sharing the same label are generated from the candidate, as can be seen in Figure \ref{fig:zhou}, an presented to the classifier. 
@@ -135,7 +135,7 @@ In our case, data augmentation is possible, as we can render synthetic images, b
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=0.6\linewidth]{human_pose_heatmap}
-    \caption{An image of a human body, the corresponding heatmap as well as the result of the Multiple Peak Entropy (MPE). Images taken from \cite{humanpose}.}
+    \caption{An image of a human body, the corresponding heatmap as well as the result of the Multiple Peak Entropy (MPE). Images from \cite{humanpose}.}
     \label{fig:humanpose}
 \end{figure}
 In \cite{humanpose}, Liu and Ferrari describe new strategy for active learning for human pose estimation, a time-consuming task to produce groundtruth annotations for. Their key contributions consist of an uncertainty estimator for the joint predictions produced by a convolutional pose machine (CPM), and an annotation interface that reduces the time needed by a human annotator to click joints. The predictions by the CPM are heatmaps, with high temperature resembling the most probable position of the joints (the input image can be seen Figure \ref{fig:humanpose}(a2), the heatmap in \ref{fig:humanpose}(b2)).
