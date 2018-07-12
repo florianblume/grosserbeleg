@@ -1,10 +1,14 @@
 \chapter{Semi Automatic Annotation} \label{chapter:semi_automatic}
 
-To assist the process of manual image annotation presented in chapter \ref{chapter:image_pose_annotation}, a neural network is to be developed to suggest poses. Those poses can then be refined by the user using the annotation tool. This chapter describes the network architecture and its variations, as well as the modified annotation process that incorporates the network.
+To assist the process of manual image annotation presented in chapter \ref{chapter:image_pose_annotation}, a neural network is to be developed to suggest poses. A neural network requires proper configuration and expertise to train it. This chapter describes the network architecture and its variations, as well as different approaches to train the network and the modified annotation process resulting from the usage of the network.
 
 \section{Terminology}
 
 \section{Network Architecture}
+
+The architecture of the network is adapted to the problem specific to the medical images.
+
+% Problem is reduced because segmentation masks are given
 
 % Pipline overview
 
@@ -22,3 +26,9 @@ To assist the process of manual image annotation presented in chapter \ref{chapt
 \subsection{Training from Scratch}
 
 \subsection{Incremental Training}
+
+\subsection{Inference}
+
+% Manual inference for large batches
+
+% Inference in the program

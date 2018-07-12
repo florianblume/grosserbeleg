@@ -19,15 +19,19 @@ The following chapter analyzes manual 6D pose annotation process and its prerequ
 
 \noindent\textbf{Correspondence.} A \textit{correspondence} $C$ is the tuple $(u, p)$, which captures the relation between a pixel $u$ of an image $I$ and an object model $O$. The pixel $u$ is the projection of the 3D point $p$ onto the image plane using the camera matrix $K$ and a pose $P$. If the pose is unknown, a set of at least three correspondences can be used to retrieve the pose computationally (see section \ref{objectcoordinates} for details). \\
 
-\noindent\textbf{Segmentation Mask.} A segmentation mask $S$ for an image $I$ is a second image of the same size. Each position $(x, y)$ of the mask encodes the class of the pixel at $(x, y)$ in $I$. The set of classes can be defined arbitrarily. In the context of this work each class represents a type of object model. The segmentation mask can be seen as the mapping $s(x, y) = q_i$ for a class set $Q = \{q_0, \cdots, q_n\}$. \\
+\noindent\textbf{Segmentation Mask.} A \textit{segmentation mask} (or \textit{segmentation image}) $S$ for an image $I$ is a second image of the same size. Each position $(x, y)$ of the mask encodes the class of the pixel at $(x, y)$ in $I$. The set of classes can be defined arbitrarily. In the context of this work each class represents a type of object model. The segmentation mask can be seen as the mapping $s(x, y) = q_i$ for a class set $Q = \{q_0, \cdots, q_n\}$. \\
 
 \noindent\textbf{Pose Creation.} The process of creating correspondences can be performed in various ways. In this work the key operation is to create a set of correspondences and solve the implied perspective-n-point problem. \\
 
-\noindent\textbf{Ground-Truth.} A \textit{Ground-Truth Pose} $\bar{P}$ is a 6D pose. A ground-truth pose is always created by a human instead of a machine. The ground-truth pose is the best approximation of the rotation and translation of an object model $O$ on an image $I$ of said object. It is an approximation because there can be a discrepancy between the real world object and its digital 3D representation. Distortions by the camera used to photograph the object and other influences might also not be modeled correctly or not accounted for at all. The rotation and translation error of a ground truth pose are bearable and thus are the objective for neural networks. \\
+\noindent\textbf{Ground-Truth.} A \textit{ground-truth pose} $\bar{P}$ is a 6D pose. A ground-truth pose is always created by a human instead of a machine. The ground-truth pose is the best approximation of the rotation and translation of an object model $O$ on an image $I$ of said object. It is an approximation because there can be a discrepancy between the real world object and its digital 3D representation. Distortions by the camera used to photograph the object and other influences might also not be modeled correctly or not accounted for at all. The rotation and translation error of a ground truth pose are bearable and thus are the objective for neural networks. \\
 
 \noindent\textbf{Bindings.} \textit{Bindings} is the term for a set of code that allows code written in one language being used in a different one. \\
 
-\noindent\textbf{Makefile.} A \textit{Makefile} is the directive file used by the program \textit{make} to compile programs of any kind. Often more complex programs imply dependencies which have to be compiled in a certain order. This is an example what make takes care of and what is defined in a makefile.
+\noindent\textbf{Makefile.} A \textit{makefile} is the directive file used by the program \textit{make} to compile programs of any kind. Often more complex programs imply dependencies which have to be compiled in a certain order. This is an example what make takes care of and what is defined in a makefile. \\
+
+\noindent\textbf{Training.} \textit{Training} stands for the process of training the neural network using gradient-descent (see chapter \ref{chapter:background}). \\
+
+\noindent\textbf{Inference.} After training a neural network it can be used to infer poses on unseen images. This is called \textit{inference}.
 
 \section{Medical Images}
 
@@ -108,7 +112,7 @@ The different sections highlighted in fig. \ref{fig:6dpat_components} are the ma
 
 The format that the program expects the image information file and the ground-truth poses file to be in is the \textit{JSON Format}. JSON is a format that is relatively easy for humans to read and is used by many deep learning applications. Transforming JSON formats can be done quickly and therefore provides the possibility to read data from other projects. \\
 
-A Python bridge is included in the program to establish interoperability between the annotation tool and the neural network. This implies a more complex setup process to compile the program but is crucial to allow refining and developing the used neural network in Python, which is more common than implementing the network in C++.
+A Python bridge is included in the program to establish interoperability between the annotation tool and the neural network. This implies a more complex setup process to compile the program but is crucial to allow refining and developing the used neural network in Python, which is more common than implementing the network in C++. 
 
 \begin{figure}[!tbp]
 	\centering
@@ -116,32 +120,6 @@ A Python bridge is included in the program to establish interoperability between
     \caption{An abstract high-level class diagram of the a subset of the classes of 6D-PAT. Own image.}
     \label{fig:6dpat_components}
 \end{figure} 
-
-\subsection{Problems \& Difficulties} \label{section:6dpat_difficulties}
-
-\begin{figure}[!tbp]
-	\centering
-    \includegraphics[width=\linewidth]{6dpat_sfb_image}
-    \caption{6D-PAT displaying an image from the medical images dataset together with the associated object models. The models are not from datast and thus do not fit the image entirely. Own image.}
-    \label{fig:6dpat_sfb_image}
-\end{figure} 
-
-\begin{figure}[!tbp]
-	\centering
-    \includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
-    \caption{6D-PAT displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the correspondence viewer, if they are present. Own image.}
-    \label{fig:6dpat_sfb_segmentation}
-\end{figure} 
-
-During the implementation of the program multiple problems arose and complicated the development process. The most drastic ones are mentioned in this section. Issues contradicting the initial usage patterns and their impact on the final design of the program are explained, as well. \\
-
-One of the major factors that prolong the implementation process was the usage of the only recently released \textit{Qt3D}, which is part of the Qt framework. Qt3D's purpose is to encapsulate graphics programming to increase portability of applications including 3D graphics. The incomplete documentation and unintuitive concepts make it difficult to use without consultation. After more and more complications emerged in the almost completed product the Qt3D framework was deemed unusable and omitted in favor of a native OpenGL implementation. \\
-
-Initially, a desired feature of the program was to present a next unannotated image when the user annotated all poses of an image. This is not feasible for multiple reasons. First of all, a user might still not be content with the poses and might signal that they are finished with the annotation process too early. Thus, it might be disturbing when the program automatically shows the next image. The datasets to annotate can also have very distinct characteristics, which require the user to choose the next image personally. For a dataset like T-Less, many images have to be skipped due to their similarity. Intuitively, the more diverse poses are annotated, the better a neural network can be trained. Instead of forcing the user to annotate varying images the motivation should be the sped up annotation process as soon as the neural network is able to make plausible predictions. The diversity of kinds of dataset is also the reason why the program does not provide functionality to initialize the next poses based on the ones in the last image. This feature would imply too many assumptions on the dataset and, in the worst case, cause more work for the user. \\
-
-While trying to annotate the medical images dataset it became clear, that proper 3D models are crucial for successful annotation. To temporarily annotate the medical images, 3D surgical tools were downloaded from the internet as a replacement for the missing object models. But having a different shape and also missing the distinctive features of the real objects makes in very difficult to estimate the ground-truth pose. It is not clear what the influence of contradicting annotated poses is during training of a network. The author of this work strongly recommends to obtain the correct 3D models before annotating the medical images. The issue of the object models not fitting the segmentation mask can be seen in fig. \ref{fig:sfb_segmentation}. Fig. \ref{fig:sfb_original} shows the actual image and the discrepancy between the models and the pixels belonging to the models. \\
-
-Although Python provides C++ bindings the integration of it into the application is quite involved. This is due to the used development environment being more complex than the one needed for a standard C++ console program. Qt's own makefile generator called \textit{qmake} is distributed with Anaconda TODO: CITE OR REFER TO OTHER SECTION EXPLAINING ANACONDA. By integrating Python into the application Qt Creator's build system tried to use Anaconda's qmake, which caused the build to fail. Unlike normally, the Qt libraries have to be included explicitly in the project.
 
 \subsection{Manual Annotation} 
 
@@ -175,11 +153,25 @@ This sections describe the user interface of 6D-PAT and the required steps to an
 	\label{fig:6dpat_ui_overview}
 \end{figure}
 
-The first step after starting the program is to open the settings (see fig. \ref{fig:6dpat_settings}) and set the path to the images that are to be annotated, as well as the path to the folder that contains the object models that should be used for annotation. The folder of the images has to contain a JSON file that holds the camera matrix $K$ for each individual image. If no camera info file exists, a Python script, that is distributed with the neural network, can be used to created approximate camera matrices. The extension of the images and the suffix of the segmentation images (if any) have to be set, too. Lastly, the location of the JSON file where the ground-truth poses are to be written to has to be specified. If no such file exists an empty one can be created and selected. If segmentation images are present they are linked to the respective image and can be viewed by activating the toggle at the bottom right corner of the correspondence viewer (the program displaying a segmentation image can be seen in fig. \ref{fig:sfb_segmentation}). If required, the colors of the object models in the segmentation images can be set using the settings dialog as shown in fig. \ref{fig:6dpat_settings_codes}. This can reduce the number of displayed tools if many different tools are needed for annotation.
+The first step after starting the program is to open the settings (see fig. \ref{fig:6dpat_settings}) and set the path to the images that are to be annotated, as well as the path to the folder that contains the object models that should be used for annotation. 
+
+The folder of the images has to contain a JSON file that holds the camera matrix $K$ for each individual image. If no camera info file exists, a Python script, that is distributed with the neural network, can be used to created approximate camera matrices. The path to the segmentation images (if any) has to be set as well. The program loads the images and the segmentation images and sorts them by the numbers in their filenames and then matches image $I$ at index $j$ with the segmentation image $S$ at index $j$. 
+
+Lastly, the location of the JSON file where the ground-truth poses are to be written to has to be specified. If no such file exists an empty one can be created and selected. If segmentation images are present they are linked to the respective image and can be viewed by activating the toggle at the bottom right corner of the correspondence viewer (the program displaying a segmentation image can be seen in fig. \ref{fig:sfb_segmentation}). 
+
+If required, the colors of the object models in the segmentation images can be set using the settings dialog as shown in fig. \ref{fig:6dpat_settings_codes}. This can reduce the number of displayed tools if many different tools are needed for annotation.
 
 \subsubsection{Correspondence and Pose Creation}
 
-To create a pose an image $I$ has to be selected from gallery B, first. The correspondence viewer C then displays the image. The model $O$ that the image is to be annotated with can be selected from the gallery E. The correspondence editor F shows the selected object model. The user can rotate the object the reach otherwise hidden areas of it. The arrow keys can be used to move the object along the $x$ and $y$ and also, if the shift key is pressed, along the $z$ axis. When the object is in an appropriate position, the user can begin to create a correspondence $C$ by clicking on $I$ and this way defining the 2D point $u$ of the correspondence. To complete the correspondence, the object model $O$ has to be clicked at the respective position $p$. This procedure has to be repeated until enough correspondences have been defined to create the new pose $P$. The minimum is 4 correspondences. The creation process is shown in fig. \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the "Create" button at the bottom of the correspondence viewer creates the pose $P$ using the correspondences $C_i$ and OpenCV's \textit{solvePnPRansac} method. The newly created pose is directly selected for editing and can be refined using the controls of the correspondence viewer.
+To create a pose an image $I$ has to be selected from gallery B, first. The correspondence viewer C then displays the image. The model $O$ that the image is to be annotated with can be selected from the gallery E. The correspondence editor F shows the selected object model. The user can rotate the object the reach otherwise hidden areas of it. The arrow keys can be used to move the object along the $x$ and $y$ and also, if the shift key is pressed, along the $z$ axis. 
+
+When the object is in an appropriate position, the user can begin to create a correspondence $C$ by clicking on $I$ and this way defining the 2D point $u$ of the correspondence. To complete the correspondence, the object model $O$ has to be clicked at the respective position $p$. This procedure has to be repeated until enough correspondences have been defined to create the new pose $P$. The minimum is 4 correspondences. 
+
+The creation process is shown in fig. \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the "Create" button at the bottom of the correspondence viewer creates the pose $P$ using the correspondences $C_i$ and OpenCV's \textit{solvePnPRansac} method. The newly created pose is directly selected for editing and can be refined using the controls of the correspondence viewer. After pose refinement it is necessary to click the "Save" button. 
+
+The slider labeled "Transparency" can be used to reduce the object's opacity on the image. After all poses have been annotated successfully the next image can be selected from the gallery B. This operation has to be repeated until the dataset is fully annotated, although intermediate states can be used to train the network already (see chapter \ref{chapter:semi_automatic}).
+
+It is possible to use the neural network to predict poses. This requires a proper setup and training of the network beforehand. The prediction process can be started by clicking the "Predict" button in the lower right corner of the correspondence editor.
 
 \begin{figure}[!tbp]
 	\centering
@@ -188,17 +180,48 @@ To create a pose an image $I$ has to be selected from gallery B, first. The corr
     \label{fig:6dpat_correspondence_creation}
 \end{figure} 
 
-% Click pixels u and corresponding 3D points p until enough to
-% create new pose P
+\subsection{Problems \& Difficulties} \label{section:6dpat_difficulties}
 
-% Example annotations
+\begin{figure}[!tbp]
+	\centering
+    \includegraphics[width=\linewidth]{6dpat_sfb_image}
+    \caption{6D-PAT displaying an image from the medical images dataset together with the associated object models. The models are not from datast and thus do not fit the image entirely. Own image.}
+    \label{fig:6dpat_sfb_image}
+\end{figure} 
 
-\subsection{Future Improvements}
+\begin{figure}[!tbp]
+	\centering
+    \includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
+    \caption{6D-PAT displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the correspondence viewer, if they are present. Own image.}
+    \label{fig:6dpat_sfb_segmentation}
+\end{figure} 
 
-% Include network in program completely
+During the implementation of the program multiple problems arose and complicated the development process. The most drastic ones are mentioned in this section. Issues contradicting the initial usage patterns and their impact on the final design of the program are explained, as well. \\
 
-% Scripting bridge to enable reading of multiple ground truth formats
+One of the major factors that prolong the implementation process was the usage of the only recently released \textit{Qt3D}, which is part of the Qt framework. Qt3D's purpose is to encapsulate graphics programming to increase portability of applications including 3D graphics. The incomplete documentation and unintuitive concepts make it difficult to use without consultation. After more and more complications emerged in the almost completed product the Qt3D framework was deemed unusable and omitted in favor of a native OpenGL implementation. \\
 
-% Port to python -> no apparent gain from C++
+Initially, a desired feature of the program was to present a next unannotated image when the user annotated all poses of an image. This is not feasible for multiple reasons. First of all, a user might still not be content with the poses and might signal that they are finished with the annotation process too early. Thus, it might be disturbing when the program automatically shows the next image. 
 
-% Movement/rotation of 3D tools by mouse
+The datasets to annotate can also have very distinct characteristics, which require the user to choose the next image personally. For a dataset like T-Less, many images have to be skipped due to their similarity. Intuitively, the more diverse poses are annotated, the better a neural network can be trained. Instead of forcing the user to annotate varying images the motivation should be the sped up annotation process as soon as the neural network is able to make plausible predictions. 
+
+The diversity of kinds of dataset is also the reason why the program does not provide functionality to initialize the next poses based on the ones in the last image. This feature would imply too many assumptions on the dataset and, in the worst case, cause more work for the user. \\
+
+While trying to annotate the medical images dataset it became clear, that proper 3D models are crucial for successful annotation. To temporarily annotate the medical images, 3D surgical tools were downloaded from the internet as a replacement for the missing object models. But having a different shape and also missing the distinctive features of the real objects makes in very difficult to estimate the ground-truth pose. 
+
+It is not clear what the influence of contradicting annotated poses is during training of a network. The author of this work strongly recommends to obtain the correct 3D models before annotating the medical images. The issue of the object models not fitting the segmentation mask can be seen in fig. \ref{fig:sfb_segmentation}. Fig. \ref{fig:sfb_original} shows the actual image and the discrepancy between the models and the pixels belonging to the models. \\
+
+Although Python provides C++ bindings the integration of it into the application is quite involved. This is due to the used development environment being more complex than the one needed for a standard C++ console program. Qt's own makefile generator called \textit{qmake} is distributed with Anaconda (for details on Anaconda see chapter \ref{chapter:semi_automatic}). 
+
+By integrating Python into the application Qt Creator's build system tried to use Anaconda's qmake, which caused the build to fail. Unlike normally, the Qt libraries have to be included explicitly in the project. This requires knowledge of the user which Qt libraries they have installed and further complicates the setup process and demands a computer science specialist. 
+
+Furthermore, the Python binding is not complete yet. Training is not possible and the a deep learning expert has to setup the network and its parameters to enable its usage in the program. The current state of the incorporation of the network is to be seen as a proof of concept that requires further development.
+
+Because the neural network is trained only for one object, the time-intensive (proportional to the overall time needed for inference on one image only) step of loading the trained weights has to be performed each time when running inference for different objects.
+
+\subsection{Future Improvements of 6D-PAT}
+
+To provide an outlook how the program can be improved in the future, some key problems as well as their solutions are listed here. An important feature that should be implemented is moving the object models around on the displayed image by dragging them. It should also be possible to rotate them with the mouse. The initial poses of the models using the clicking procedure are pretty accurate in many cases already. But sometimes, when the camera is looking along an axis of the object directly, it happens that the rotation is far off. The user can correct the poses with the provided controls. But using them takes some skill and time. The describe editing process would profit in terms of time needed per annotation. 
+
+The problem of the time needed for loading the weights of the neural network could be solved by offering an intermediate screen that allows to select many images and the object that is to be annotated. The time of loading the weights gets amortized when running inference for many images. Another possibility is to add a component that allows selection of the weights to be loaded and inference is then only run for the corresponding object. This way a reference to the network with the loaded weights could be held and inference could be run without the loading step.
+
+Two options arise to fully include the neural network in the annotation tool. The first is to complete the Python bridge to support all network operations. It is not possible to automatically set all parameters for the network but the need for a deep learning expert can probably be reduced to a minimum and limited to setting up the network. The other option is to completely re-write the application in Python. The initial intuition that a C++ program offers superior performance over Python is not tenable. Although Python is slower in general Qt bindings for Python allow usage of the C++ components by calling them from Python. The same holds for various OpenGL bindings for Python. The author of this work assumes that there would be no significant  performance loss when using Python as the main language. Including the network is a lot easier when using only Python. An application in Python is also fully portable and experienced users can easily and quickly modify the tool. Although the methods described in chapter \ref{chapter:semi_automatic} are a feasible way of operating the neural network, incorporating the network into the annotation tool would allow inexperienced users to make use of it, too.
