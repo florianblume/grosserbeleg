@@ -942,3 +942,54 @@ booktitle = {Proceedings of ICML}
   biburl    = {https://dblp.org/rec/bib/journals/corr/AbadiABBCCCDDDG16},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+
+@article{next_view_dataset,
+  author    = {Andreas Doumanoglou and
+               Rigas Kouskouridas and
+               Sotiris Malassiotis and
+               Tae{-}Kyun Kim},
+  title     = {6D Object Detection and Next-Best-View Prediction in the Crowd},
+  journal   = {CoRR},
+  volume    = {abs/1512.07506},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1512.07506},
+  archivePrefix = {arXiv},
+  eprint    = {1512.07506},
+  timestamp = {Wed, 07 Jun 2017 14:42:41 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/DoumanoglouKMK15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article {pracsys_dataset,
+	title = {A Dataset for Improved RGBD-based Object Detection and Pose Estimation for Warehouse Pick-and-Place},
+	journal = {IEEE Robotics and Automation Letters (RA-L) [Also accepted to appear at the 2016 IEEE International Conference on Robotics and Automation (ICRA)]},
+	volume = {1},
+	year = {2016},
+	month = {02/2016},
+	pages = {1179 - 1185},
+	address = {Stockholm, Sweden},
+	abstract = {An important logistics application of robotics involves manipulators that pick-and-place objects placed in warehouse shelves. A critical aspect of this task corresponds to detecting the pose of a known object in the shelf using visual data. Solving this problem can be assisted by the use of an RGB-D sensor, which also provides depth information beyond visual data. Nevertheless, it remains a challenging problem since multiple issues need to be addressed, such as low illumination inside shelves, clutter, texture-less and reflective objects as well as the limitations of depth sensors. This paper provides a new rich data set for advancing the state-of-the-art in RGBD-based 3D object pose estimation, which is focused on the challenges that arise when solving warehouse pick-and-place tasks. The publicly available data set includes thousands of images and corresponding ground truth data for the objects used during the first Amazon Picking Challenge at different poses and clutter conditions. Each image is accompanied with ground truth information to assist in the evaluation of algorithms for object detection. To show the utility of the data set, a recent algorithm for RGBD-based pose estimation is evaluated in this paper. Based on the measured performance of the algorithm on the data set, various modifications and improvements are applied to increase the accuracy of detection. These steps can be easily applied to a variety of different methodologies for object pose detection and improve performance in the domain of warehouse pick-and-place.},
+	url = {http://www.cs.rutgers.edu/~kb572/pubs/icra16_pose_estimation.pdf},
+	author = {Rennie, C. and Shome, R. and Bekris, K. E. and Ferreira De Souza, A.}
+}
+
+@inproceedings{rigid_body_dataset,
+  title = {Real-time model-based rigid object pose estimation and tracking combining dense and sparse visual cues},
+  author = {Pauwels, Karl and Rubio, Leonardo and Diaz Alonso, Javier and Ros, Eduardo},
+  year = {2013},
+  date = {2013-01-01},
+  booktitle = {Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {2347--2354},
+  address = {Portland},
+  abstract = {We propose a novel model-based method for estimating and tracking the six-degrees-of-freedom (6DOF) pose of rigid objects of arbitrary shapes in real-time. By combining dense motion and stereo cues with sparse key point correspondences, and by feeding back information from the model to the cue extraction level, the method is both highly accurate and robust to noise and occlusions. A tight integration of the graphical and computational capability of Graphics Processing Units (GPUs) results in pose updates at frame rates exceeding 60 Hz. Since a benchmark dataset that enables the evaluation of stereo-vision-based pose estimators in complex scenarios is currently missing in the literature, we have introduced a novel synthetic benchmark dataset with varying objects, background motion, noise and occlusions. Using this dataset and a novel evaluation methodology, we show that the proposed method greatly outperforms state-of-the-art methods. Finally, we demonstrate excellent performance on challenging real-world sequences involving object manipulation.},
+  keywords = {Adaptive optics, benchmark, Computational modeling, cue extraction level, dense motion cues, dense visual cues, Estimation, feature extraction, graphics processing unit, graphics processing units, Integrated optics, model-based, object manipulation, occlusions, Optical feedback, optical flow, Optical imaging, pose estimation, pose tracking, real-time, real-time model-based rigid object pose estimation, real-time systems, real-world sequences, six-degrees-of-freedom pose, sparse keypoint correspondences, sparse visual cues, Stereo, stereo cues, stereo image processing, stereo-vision-based pose estimators, tracking, {6DOF} pose estimation, {GPU} computational capability, {GPU} graphical capability, {ICP}, {SIFT}},
+  pubstate = {published},
+  tppubtype = {inproceedings}
+}
+
+@misc{keras,
+  title={Keras},
+  author={Chollet, Fran\c{c}ois and others},
+  year={2015},
+  howpublished={\url{https://keras.io}},
+}

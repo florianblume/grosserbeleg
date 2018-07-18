@@ -1,4 +1,4 @@
-\chapter{Manual Annotation} \label{chapter:image_pose_annotation}
+\chapter{Manual Annotation} \label{chapter:manual_annotation}
 
 \begin{figure}[!tbp]
 	\centering
@@ -13,7 +13,7 @@ The following chapter analyzes manual 6D pose annotation process and its prerequ
 
 \textbf{Image.} An image $I$ is a 2D matrix of pixels. The pixel $u$ at position $(i, j)$ is referenced by the tuple $(x, y)$, where $x = j$ and $y = i$. The inverted notation is chosen over the common row-major matrix indexing to account for the universal  \\
 
-\noindent\textbf{Object Model.} An \textit{object model}, or \textit{3D model}, $O$ is composed of a set of points $M \subseteq \mathbb{R}^3$ and a set of triangles $T = \{(m_1, m_2, m_3) \in M^3\}$. The real-world entity that the object model resembles is not restricted. In case of the T-Less dataset \cite{tless} the objects are mainly hardware like screws and power sockets. \\
+\noindent\textbf{Object Model.} An \textit{object model}, or \textit{3D model}, $O$ is composed of a set of points $M \subseteq \mathbb{R}^3$ and a set of triangles $T = \{(m_1, m_2, m_3) \in M^3\}$, also called mesh. The real-world entity that the object model resembles is not restricted. In case of the T-Less dataset \cite{tless} the objects are mainly hardware like screws and power sockets. \\
 
 \noindent\textbf{6D Pose.} A \textit{6D pose} $P$ is the tuple $(R, t)$, where $R$ is the 3x3 rotation matrix and $t$ the translation vector used to transform the respective object model into camera coordinates (see section \ref{objectcoordinates} for details). \\
 
@@ -31,7 +31,7 @@ The following chapter analyzes manual 6D pose annotation process and its prerequ
 
 \noindent\textbf{Training.} \textit{Training} stands for the process of training the neural network using gradient-descent (see chapter \ref{chapter:background}). \\
 
-\noindent\textbf{Inference.} After training a neural network it can be used to infer poses on unseen images. This is called \textit{inference}.
+\noindent\textbf{Inference.} After training a neural network it can be used to predict poses on unseen images. This is called \textit{inference}.
 
 \section{Medical Images}
 
@@ -58,25 +58,13 @@ The goal of this work is to provide a system to successfully and efficiently ann
 
 \section{6D Pose Annotation Tool (6D-PAT)}
 
-The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling programs, require the annotation personnel to get accustomed to complex user interfaces (UIs). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images, images of the medical dataset in particular. The annotated poses, the so-called \textit{Ground-Truth Poses} (see section \ref{section:terminology}), can later be used to train a neural network. The program is written in the language C++ and named \textit{6D - Pose Annotation Tool (6D-PAT)}. Its logo can be seen in fig \ref{fig:6dpat_logo}. Although the program was developed using the \textit{Linux}-based operating system \textit{Ubuntu}, it is compilable on other systems as well.
-
-\subsection{Requirements}
-
-TODO. \\
-
-TODO. \\
-
-TODO. \\
-
-TODO. \\
-
-TODO. \\
+The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling programs, require the annotation personnel to get accustomed to complex user interfaces (\gls{ui}s). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images, images of the medical dataset in particular. The annotated poses, the so-called \textit{Ground-Truth Poses} (see section \ref{section:terminology}), can later be used to train a neural network. The program is written in the language C++ and named \textit{6D - Pose Annotation Tool (\gls{6dpat})}. Its logo can be seen in fig \ref{fig:6dpat_logo}. Although the program was developed using the \textit{Linux}-based operating system \textit{Ubuntu}, it is compilable on other systems as well.
 
 \subsection{Frameworks \& Third-Party Libraries}
 
 The listed frameworks are all necessary dependencies of the annotation tool. There are no dependencies other than the mentioned ones. They are not part of the repository but have to be compiled individually instead. Since all three frameworks/libraries are platform-independent the program can be compiled and run on different systems. \\
 
-\noindent\textbf{Qt.} \textit{Qt} \cite{qt} is a powerful framework for C++ that offers a vast selection of user interface components but also general functionality that exceeds the capabilities of the standard C++ library. Qt is also chosen as the main framework because it ensures portability of C++ applications by encapsulating system calls of all kind. The program \textit{Qt Creator} is the \textit{Integrated Development Environment (IDE)} that is included in the Qt distribution was used to write and execute the code of 6D-PAT. An IDE combines an editor to edit code an some environment to execute it. \\
+\noindent\textbf{Qt.} \textit{Qt} \cite{qt} is a powerful framework for C++ that offers a vast selection of user interface components but also general functionality that exceeds the capabilities of the standard C++ library. Qt is also chosen as the main framework because it ensures portability of C++ applications by encapsulating system calls of all kind. The program \textit{Qt Creator} is the \textit{Integrated Development Environment (IDE)} that is included in the Qt distribution was used to write and execute the code of \gls{6dpat}. An IDE combines an editor to edit code an some environment to execute it. \\
 
 \noindent\textbf{OpenGL.} \textit{OpenGL} \cite{opengl} is a widespread open-source 3D graphics library specification. Implementations for many operating systems exist, thus making most OpenGL using applications compilable in different environments without further modifications. \textit{Mesa 3D} \\
 
@@ -101,10 +89,10 @@ The listed frameworks are all necessary dependencies of the annotation tool. The
     	\caption{The Signals and Slots mechanism of Qt. A class can define signals it can emit, independently of any listeners waiting for that signal. Slots are the functions that, when connected a signal, are called and can thus react to the signal. Image from \cite{qt_signals_and_slots}.}
     	\label{fig:qt_signals_slots}
 	\end{subfigure}
-	\caption{Two basic architectural concepts used in 6D-PAT: the model view controller pattern and the signal and slots pattern.}
+	\caption{Two basic architectural concepts used in \gls{6dpat}: the model view controller pattern and the signal and slots pattern.}
 \end{figure} 
 
-6D-PAT is primarily a \textit{Graphical User Interface (GUI)} program primarily, i.e. its purpose is to display a window and enable optical interaction like clicking. Thus, the chosen underlying architecture is \textit{Model-View-Controller (MVC)}, which separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the MVC architecture is given in fig. \ref{fig:mvc}. The indirect connections are realized via the Qt Signals and Slots mechanism, which is visualized in fig. \ref{fig:qt_signals_slots}. To speed up interface creation, \textit{Qt Designer} is used to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots. \\
+\gls{6dpat} is primarily a \textit{Graphical User Interface (GUI)} program, i.e. its purpose is to display a window and enable optical interaction like clicking. Thus, the chosen underlying architecture is \textit{Model-View-Controller (\gls{mvc})}, which separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \gls{mvc} architecture is given in fig. \ref{fig:mvc}. The indirect connections are realized via the Qt Signals and Slots mechanism, which is visualized in fig. \ref{fig:qt_signals_slots}. To speed up interface creation, \textit{Qt Designer} is used to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots. \\
 
 TODO: describe class diagram first and then say what component is visible in the figure
 
@@ -117,13 +105,13 @@ A Python bridge is included in the program to establish interoperability between
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=\linewidth]{6dpat_class_diagram}
-    \caption{An abstract high-level class diagram of the a subset of the classes of 6D-PAT. Own image.}
+    \caption{An abstract high-level class diagram of the a subset of the classes of \gls{6dpat}. Own image.}
     \label{fig:6dpat_components}
 \end{figure} 
 
 \subsection{Manual Annotation} 
 
-This sections describe the user interface of 6D-PAT and the required steps to annotate images with 6D poses. The process needs some actions performed before the actual annotation can be begin. 
+This sections describe the user interface of \gls{6dpat} and the required steps to annotate images with 6D poses. The process needs some actions performed before the actual annotation can be begin. 
 
 \subsubsection{Preparation}
 
@@ -132,14 +120,14 @@ This sections describe the user interface of 6D-PAT and the required steps to an
 	\begin{subfigure}[t]{\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_components}
-    	\caption{The user interface of the annotation tool 6D-PAT. The data displayed are images and object models from the T-Less dataset. The components marked with a turquoise box are the following ones: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The gallery showing the images loaded from the selected path. \textbf{C}: The \textit{Correspondence Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D point of a new correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The rendered 3D preview of the object models loaded from the selected path. \textbf{F}: The \textit{Correspondence Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. the controls at the bottom can be used to edit existing correspondences. Own image.}
+    	\caption{The user interface of the annotation tool \gls{6dpat}. The data displayed are images and object models from the T-Less dataset. The components marked with a turquoise box are the following ones: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The gallery showing the images loaded from the selected path. \textbf{C}: The \textit{Correspondence Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D point of a new correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The rendered 3D preview of the object models loaded from the selected path. \textbf{F}: The \textit{Correspondence Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. the controls at the bottom can be used to edit existing correspondences. Own image.}
     	\label{fig:6dpat_components}
 	\end{subfigure}
 	\par\bigskip
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=0.8\linewidth]{6dpat_settings}
-    	\caption{The settings dialog of 6D-PAT. From here the paths to the images and object models can be set, as well as the segmentation image suffix the image type and the file to write the poses to. Own image.}
+    	\caption{The settings dialog of \gls{6dpat}. From here the paths to the images and object models can be set, as well as the segmentation image suffix the image type and the file to write the poses to. Own image.}
     	\label{fig:6dpat_settings}
 	\end{subfigure}
 	\hfill
@@ -149,7 +137,7 @@ This sections describe the user interface of 6D-PAT and the required steps to an
     	\caption{The settings dialog while editing the colors of the object models in the segmentation images. Own image.}
     	\label{fig:6dpat_settings_codes}
 	\end{subfigure}
-	\caption{The main view of 6D-PAT as well as the two settings views.}
+	\caption{The main view of \gls{6dpat} as well as the two settings views.}
 	\label{fig:6dpat_ui_overview}
 \end{figure}
 
@@ -185,14 +173,14 @@ It is possible to use the neural network to predict poses. This requires a prope
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=\linewidth]{6dpat_sfb_image}
-    \caption{6D-PAT displaying an image from the medical images dataset together with the associated object models. The models are not from datast and thus do not fit the image entirely. Own image.}
+    \caption{\gls{6dpat} displaying an image from the medical images dataset together with the associated object models. The models are not from datast and thus do not fit the image entirely. Own image.}
     \label{fig:6dpat_sfb_image}
 \end{figure} 
 
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
-    \caption{6D-PAT displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the correspondence viewer, if they are present. Own image.}
+    \caption{\gls{6dpat} displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the correspondence viewer, if they are present. Own image.}
     \label{fig:6dpat_sfb_segmentation}
 \end{figure} 
 
@@ -218,10 +206,12 @@ Furthermore, the Python binding is not complete yet. Training is not possible an
 
 Because the neural network is trained only for one object, the time-intensive (proportional to the overall time needed for inference on one image only) step of loading the trained weights has to be performed each time when running inference for different objects.
 
-\subsection{Future Improvements of 6D-PAT}
+\subsection{Future Improvements of \gls{6dpat}}
 
 To provide an outlook how the program can be improved in the future, some key problems as well as their solutions are listed here. An important feature that should be implemented is moving the object models around on the displayed image by dragging them. It should also be possible to rotate them with the mouse. The initial poses of the models using the clicking procedure are pretty accurate in many cases already. But sometimes, when the camera is looking along an axis of the object directly, it happens that the rotation is far off. The user can correct the poses with the provided controls. But using them takes some skill and time. The describe editing process would profit in terms of time needed per annotation. 
 
 The problem of the time needed for loading the weights of the neural network could be solved by offering an intermediate screen that allows to select many images and the object that is to be annotated. The time of loading the weights gets amortized when running inference for many images. Another possibility is to add a component that allows selection of the weights to be loaded and inference is then only run for the corresponding object. This way a reference to the network with the loaded weights could be held and inference could be run without the loading step.
 
 Two options arise to fully include the neural network in the annotation tool. The first is to complete the Python bridge to support all network operations. It is not possible to automatically set all parameters for the network but the need for a deep learning expert can probably be reduced to a minimum and limited to setting up the network. The other option is to completely re-write the application in Python. The initial intuition that a C++ program offers superior performance over Python is not tenable. Although Python is slower in general Qt bindings for Python allow usage of the C++ components by calling them from Python. The same holds for various OpenGL bindings for Python. The author of this work assumes that there would be no significant  performance loss when using Python as the main language. Including the network is a lot easier when using only Python. An application in Python is also fully portable and experienced users can easily and quickly modify the tool. Although the methods described in chapter \ref{chapter:semi_automatic} are a feasible way of operating the neural network, incorporating the network into the annotation tool would allow inexperienced users to make use of it, too.
+
+%% TODO: mention zoom in program
