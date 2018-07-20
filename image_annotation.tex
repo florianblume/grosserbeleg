@@ -33,10 +33,6 @@ The following chapter analyzes manual 6D pose annotation process and its prerequ
 
 \noindent\textbf{Inference.} After training a neural network it can be used to predict poses on unseen images. This is called \textit{inference}.
 
-\section{Medical Images}
-
-The goal of this work is to provide a system to successfully and efficiently annotate the medical images that were provided upfront. The dataset includes segmentation masks but no object models or existing pose annotations. An example image together with the corresponding segmentation mask are given in fig \ref{fig:sfb}. The dataset resembles the characteristics and quality of images from laparoscopic videos, i.e. there is no depth information present and occlusion and artifacts like motion blur can occur. The issues with this dataset are discussed in section \ref{section:6dpat_difficulties}. 
-
 \begin{figure}[!tbp]
 	\centering
 	\begin{subfigure}[t]{0.47\textwidth}
@@ -56,23 +52,11 @@ The goal of this work is to provide a system to successfully and efficiently ann
 	\label{fig:sfb}
 \end{figure} 
 
+\section{Medical Images}
+
+The goal of this work is to provide a system to successfully and efficiently annotate the medical images that were provided upfront. The dataset includes segmentation masks but no object models or existing pose annotations. An example image together with the corresponding segmentation mask are given in fig \ref{fig:sfb}. The dataset resembles the characteristics and quality of images from laparoscopic videos, i.e. there is no depth information present and occlusion and artifacts like motion blur can occur. The issues with this dataset are discussed in section \ref{section:6dpat_difficulties}. 
+
 \section{6D Pose Annotation Tool (6D-PAT)}
-
-The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling programs, require the annotation personnel to get accustomed to complex user interfaces (\gls{ui}s). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images, images of the medical dataset in particular. The annotated poses, the so-called \textit{Ground-Truth Poses} (see section \ref{section:terminology}), can later be used to train a neural network. The program is written in the language C++ and named \textit{6D - Pose Annotation Tool (\gls{6dpat})}. Its logo can be seen in fig \ref{fig:6dpat_logo}. Although the program was developed using the \textit{Linux}-based operating system \textit{Ubuntu}, it is compilable on other systems as well.
-
-\subsection{Frameworks \& Third-Party Libraries}
-
-The listed frameworks are all necessary dependencies of the annotation tool. There are no dependencies other than the mentioned ones. They are not part of the repository but have to be compiled individually instead. Since all three frameworks/libraries are platform-independent the program can be compiled and run on different systems. \\
-
-\noindent\textbf{Qt.} \textit{Qt} \cite{qt} is a powerful framework for C++ that offers a vast selection of user interface components but also general functionality that exceeds the capabilities of the standard C++ library. Qt is also chosen as the main framework because it ensures portability of C++ applications by encapsulating system calls of all kind. The program \textit{Qt Creator} is the \textit{Integrated Development Environment (IDE)} that is included in the Qt distribution was used to write and execute the code of \gls{6dpat}. An IDE combines an editor to edit code an some environment to execute it. \\
-
-\noindent\textbf{OpenGL.} \textit{OpenGL} \cite{opengl} is a widespread open-source 3D graphics library specification. Implementations for many operating systems exist, thus making most OpenGL using applications compilable in different environments without further modifications. \textit{Mesa 3D} \\
-
-\noindent\textbf{OpenCV.} \textit{OpenCV} \cite{opencv} is a C++ library created for various computer vision tasks, hence the name. OpenCV provides implementations for tracking, object detection, segmentation and many more. In this work its \textit{solvePnPRansac} is used. \\
-
-\noindent\textbf{Assimp.} \textit{Assimp} \cite{assimp} is a C++ library designed to import 3D models. The library was incorporated into the tool to ensure a broad support of 3D model formats.
-
-\subsection{Architecture \& Code Design}
 
 \begin{figure}[!tbp]
 	\centering
@@ -92,22 +76,36 @@ The listed frameworks are all necessary dependencies of the annotation tool. The
 	\caption{Two basic architectural concepts used in \gls{6dpat}: the model view controller pattern and the signal and slots pattern.}
 \end{figure} 
 
-\gls{6dpat} is primarily a \textit{Graphical User Interface (GUI)} program, i.e. its purpose is to display a window and enable optical interaction like clicking. Thus, the chosen underlying architecture is \textit{Model-View-Controller (\gls{mvc})}, which separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \gls{mvc} architecture is given in fig. \ref{fig:mvc}. The indirect connections are realized via the Qt Signals and Slots mechanism, which is visualized in fig. \ref{fig:qt_signals_slots}. To speed up interface creation, \textit{Qt Designer} is used to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots. \\
+The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling programs, require the annotation personnel to get accustomed to complex user interfaces (\gls{ui}s). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images, images of the medical dataset in particular. The annotated poses, the so-called \textit{Ground-Truth Poses} (see section \ref{section:terminology}), can later be used to train a neural network. The program is written in the language C++ and named \textit{6D - Pose Annotation Tool (\gls{6dpat})}. Its logo can be seen in fig \ref{fig:6dpat_logo}. Although the program was developed using the \textit{Linux}-based operating system \textit{Ubuntu}, it is compilable on other systems as well.
 
-TODO: describe class diagram first and then say what component is visible in the figure
+\subsection{Frameworks \& Third-Party Libraries}
 
-The different sections highlighted in fig. \ref{fig:6dpat_components} are the main classes of the visual part of the program. Those components are the two breadcrumb navigations A and D, which show the currently selected folder to load images and object models from respectively. The loaded images can be viewed in gallery B and the loaded objects models in gallery E. An image that was selected from the gallery B is displayed in the \textit{Correspondence Viewer} dubbed window C at the bottom left. The view F is called the \textit{Correspondence Editor}. It's showing the selected object model and controls to edit existing correspondences. \\
+The listed frameworks are all necessary dependencies of the annotation tool. There are no dependencies other than the mentioned ones. They are not part of the repository but have to be compiled individually instead. Since all three frameworks/libraries are platform-independent the program can be compiled and run on different systems. \\
 
-The format that the program expects the image information file and the ground-truth poses file to be in is the \textit{JSON Format}. JSON is a format that is relatively easy for humans to read and is used by many deep learning applications. Transforming JSON formats can be done quickly and therefore provides the possibility to read data from other projects. \\
+\noindent\textbf{Qt.} \textit{Qt} \cite{qt} is a powerful framework for C++ that offers a vast selection of user interface components but also general functionality that exceeds the capabilities of the standard C++ library. Qt is also chosen as the main framework because it ensures portability of C++ applications by encapsulating system calls of all kind. The program \textit{Qt Creator} is the \textit{Integrated Development Environment (IDE)} that is included in the Qt distribution was used to write and execute the code of \gls{6dpat}. An IDE combines an editor to edit code an some environment to execute it. \\
 
-A Python bridge is included in the program to establish interoperability between the annotation tool and the neural network. This implies a more complex setup process to compile the program but is crucial to allow refining and developing the used neural network in Python, which is more common than implementing the network in C++. 
+\noindent\textbf{OpenGL.} \textit{OpenGL} \cite{opengl} is a widespread open-source 3D graphics library specification. Implementations for many operating systems exist, thus making most OpenGL using applications compilable in different environments without further modifications. \textit{Mesa 3D} \\
+
+\noindent\textbf{OpenCV.} \textit{OpenCV} \cite{opencv} is a C++ library created for various computer vision tasks, hence the name. OpenCV provides implementations for tracking, object detection, segmentation and many more. In this work its \textit{solvePnPRansac} is used. \\
 
 \begin{figure}[!tbp]
 	\centering
-    \includegraphics[width=\linewidth]{6dpat_class_diagram}
+    \includegraphics[width=0.9\linewidth]{6dpat_class_diagram}
     \caption{An abstract high-level class diagram of the a subset of the classes of \gls{6dpat}. Own image.}
-    \label{fig:6dpat_components}
+    \label{fig:6dpat_class_diagram}
 \end{figure} 
+
+\noindent\textbf{Assimp.} \textit{Assimp} \cite{assimp} is a C++ library designed to import 3D models. The library was incorporated into the tool to ensure a broad support of 3D model formats.
+
+\subsection{Architecture \& Code Design}
+
+\gls{6dpat} is primarily a \textit{Graphical User Interface (GUI)} program, i.e. its purpose is to display a window and enable optical interaction like clicking. Thus, the chosen underlying architecture is \textit{Model-View-Controller (\gls{mvc})}, which separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \gls{mvc} architecture is given in fig. \ref{fig:mvc}. The indirect connections are realized via the Qt Signals and Slots mechanism, which is visualized in fig. \ref{fig:qt_signals_slots}. To speed up interface creation, \textit{Qt Designer} was used to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots. \\
+
+The most important C++ classes of the program are displayed in fig. \ref{fig:6dpat_class_diagram}. The diagram is simplified for easier understanding. The arrows from the large rectangles imply usage of the classes in the target rectangle. This does not necessarily mean, that all classes of the source use all classes of the target rectangle. The \textit{Pose Editor} uses the \textit{Model Manager} but the \textit{Breadcrumb View} does not, for example. The general structure of the program is the following: the main controller holds references to the \textit{Neural Network Manager}, the \textit{Pose Creator} and the \textit{Main Window}. The neural network manager uses the \textit{Neural Network Runnable} the execute training and inference tasks with the neural network. The pose creator manages the currently clicked corresponding points and computes the new pose when requested and enough corresponding points were clicked. The main window consists of the two main widgets \textit{Pose Editor} and \textit{Pose Viewer}. The pose editor can display an object model $O$ selected from the objects gallery and allows editing all poses $P$ of an image $I$ selected from the images gallery. Both \textit{Gallerys} are owned by the main window, as well. The pose viewer in turn renders all poses $P$ of an image $I$ onto the image. Pose viewer and editor can be used to create new poses (see section \ref{subsection:correspondence_and_pose_creation}). The main window also dispalys the paths selected to load images and object models from using the \textit{Breadcrumb Views}, and allows navigation through the gallerys via the \textit{Navigation Controls}. The settings dialog can be opened from the to edit the preferences of the program. To run the network inference ,the \textit{Neural Network Dialog}, owned by the main window, can be openend to select the images to run prediction on. The main window then displays the \textit{Neural Network Progress View}. Most view classes use the model manager, the \textit{Pose}, the \textit{Object Model} and the \textit{Image} class. Their use should be clear. The main controller sets the \textit{Load And Store Strategy} on the model manager. This class is responsible for reading imags and object models from the hard-drive, as well as persiting poses. The \textit{JSON Load And Store Strategy} uses the JSON format to store poses and read camera matrices. The \textit{Caching Model Manager} is a simple implementation of the model manager interface that chaches images, object models and poses instead of delegating all loading calls to the strategy.
+
+The program expects the camera information and the ground-truth poses file to be in \textit{JSON format}. JSON is a format that is relatively easy for humans to read and is used by many deep learning applications. Transforming JSON formats can be done quickly and therefore provides the possibility to read data from other projects. \\
+
+The program offers functionality to start the network inference. We realized this feature by starting a new process instead of implementing a Python bridge because the network writes the inferred poses back to the ground-truth file and we do not need to retrieve Python objects as return values.
 
 \subsection{Manual Annotation} 
 
@@ -120,7 +118,7 @@ This sections describe the user interface of \gls{6dpat} and the required steps 
 	\begin{subfigure}[t]{\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_components}
-    	\caption{The user interface of the annotation tool \gls{6dpat}. The data displayed are images and object models from the T-Less dataset. The components marked with a turquoise box are the following ones: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The gallery showing the images loaded from the selected path. \textbf{C}: The \textit{Correspondence Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D point of a new correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The rendered 3D preview of the object models loaded from the selected path. \textbf{F}: The \textit{Correspondence Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. the controls at the bottom can be used to edit existing correspondences. Own image.}
+    	\caption{The user interface of the annotation tool \gls{6dpat}. The data displayed are images and object models from the T-Less dataset. The components marked with a turquoise box are the following ones: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The gallery showing the images loaded from the selected path. \textbf{C}: The \textit{Pose Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D point of a new pose. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The rendered 3D preview of the object models loaded from the selected path. \textbf{F}: The \textit{Pose Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. the controls at the bottom can be used to edit existing poses. Own image.}
     	\label{fig:6dpat_components}
 	\end{subfigure}
 	\par\bigskip
@@ -145,21 +143,21 @@ The first step after starting the program is to open the settings (see fig. \ref
 
 The folder of the images has to contain a JSON file that holds the camera matrix $K$ for each individual image. If no camera info file exists, a Python script, that is distributed with the neural network, can be used to created approximate camera matrices. The path to the segmentation images (if any) has to be set as well. The program loads the images and the segmentation images and sorts them by the numbers in their filenames and then matches image $I$ at index $j$ with the segmentation image $S$ at index $j$. 
 
-Lastly, the location of the JSON file where the ground-truth poses are to be written to has to be specified. If no such file exists an empty one can be created and selected. If segmentation images are present they are linked to the respective image and can be viewed by activating the toggle at the bottom right corner of the correspondence viewer (the program displaying a segmentation image can be seen in fig. \ref{fig:sfb_segmentation}). 
+Lastly, the location of the JSON file where the ground-truth poses are to be written to has to be specified. If no such file exists an empty one can be created and selected. If segmentation images are present they are linked to the respective image and can be viewed by activating the toggle at the bottom right corner of the pose viewer (the program displaying a segmentation image can be seen in fig. \ref{fig:sfb_segmentation}). 
 
 If required, the colors of the object models in the segmentation images can be set using the settings dialog as shown in fig. \ref{fig:6dpat_settings_codes}. This can reduce the number of displayed tools if many different tools are needed for annotation.
 
-\subsubsection{Correspondence and Pose Creation}
+\subsubsection{Correspondence and Pose Creation} \label{subsection:correspondence_and_pose_creation}
 
-To create a pose an image $I$ has to be selected from gallery B, first. The correspondence viewer C then displays the image. The model $O$ that the image is to be annotated with can be selected from the gallery E. The correspondence editor F shows the selected object model. The user can rotate the object the reach otherwise hidden areas of it. The arrow keys can be used to move the object along the $x$ and $y$ and also, if the shift key is pressed, along the $z$ axis. 
+To create a pose an image $I$ has to be selected from gallery B, first. The pose viewer C then displays the image. The model $O$ that the image is to be annotated with can be selected from the gallery E. The pose editor F shows the selected object model. The user can rotate the object the reach otherwise hidden areas of it. The arrow keys can be used to move the object along the $x$ and $y$ and also, if the shift key is pressed, along the $z$ axis. 
 
 When the object is in an appropriate position, the user can begin to create a correspondence $C$ by clicking on $I$ and this way defining the 2D point $u$ of the correspondence. To complete the correspondence, the object model $O$ has to be clicked at the respective position $p$. This procedure has to be repeated until enough correspondences have been defined to create the new pose $P$. The minimum is 4 correspondences. 
 
-The creation process is shown in fig. \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the "Create" button at the bottom of the correspondence viewer creates the pose $P$ using the correspondences $C_i$ and OpenCV's \textit{solvePnPRansac} method. The newly created pose is directly selected for editing and can be refined using the controls of the correspondence viewer. After pose refinement it is necessary to click the "Save" button. 
+The creation process is shown in fig. \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the "Create" button at the bottom of the pose viewer creates the pose $P$ using the correspondences $C_i$ and OpenCV's \textit{solvePnPRansac} method. The newly created pose is directly selected for editing and can be refined using the controls of the pose viewer. After pose refinement it is necessary to click the "Save" button. 
 
 The slider labeled "Transparency" can be used to reduce the object's opacity on the image. After all poses have been annotated successfully the next image can be selected from the gallery B. This operation has to be repeated until the dataset is fully annotated, although intermediate states can be used to train the network already (see chapter \ref{chapter:semi_automatic}).
 
-It is possible to use the neural network to predict poses. This requires a proper setup and training of the network beforehand. The prediction process can be started by clicking the "Predict" button in the lower right corner of the correspondence editor.
+It is possible to use the neural network to predict poses. This requires a proper setup and training of the network beforehand. The prediction process can be started by clicking the "Predict" button in the lower right corner of the pose editor.
 
 \begin{figure}[!tbp]
 	\centering
@@ -180,7 +178,7 @@ It is possible to use the neural network to predict poses. This requires a prope
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
-    \caption{\gls{6dpat} displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the correspondence viewer, if they are present. Own image.}
+    \caption{\gls{6dpat} displaying the segmentation image of an image from the medical images dataset. Segmentation images can be viewed by activating the toggle at the bottom right corner of the pose viewer, if they are present. Own image.}
     \label{fig:6dpat_sfb_segmentation}
 \end{figure} 
 
