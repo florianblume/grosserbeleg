@@ -4,8 +4,8 @@
 	\centering
 	\begin{minipage}[t]{0.45\textwidth}
 		\centering
-    	\includegraphics[width=0.6\linewidth]{ffnn}
-    	\caption{Abstract structure of a feed-forward neural network. A real network will have many more layers and a lot more neurons per layer. Own figure.}
+    	\includegraphics[width=0.8\linewidth]{ffnn}
+    	\caption{Abstract structure of a feed-forward neural network. Most networks have more layers and more neurons per layer. Own figure.}
     	\label{fig:ffnn}
     \end{minipage}
 	\hfill
@@ -27,32 +27,32 @@
     			\addplot [mark=none,  blue,   ultra thick] {max(0, x)}; 
   			\end{axis}
 		\end{tikzpicture}
-    	\caption{Visualization of the ReLU activation function. Own figure.}
+    	\caption{Visualization of the ReLU activation function $f(x) = \max(0, x)$. Own figure.}
     	\label{fig:relu}
     \end{minipage}
 \end{figure} 
 
 \section{Neural Networks}
 
-The following sections dissect the individual components of a neural network and explain concepts and procedures.
+The following sections dissect the individual components of a neural network and explain concepts and procedures. 
 
 \subsection{Neuron}
 
-A \textit{Neuron} is the smallest unit of a neural network and is essentially what the network is made up of. It computes the linear function 
+A \textit{Neuron} is the smallest atomic unit of a neural network. The layers of a network consist of neurons. A neuron computes the linear function 
 
 \begin{align}
 y = \sum\limits_{i=0}^kw_ix_i + b
 \end{align}
 
-where $w_i$ is the weight for the $i$-th input $x_i$ and $b$ is a bias. The weights and the bias are the values that can be learned during the training process of the network (see Section \ref{section:network_training}). The output of a layer of neurons of a network is the vector $(y_0, \cdots, y_t)$, $y_j$ being the output of the $j$-th neuron. Those outputs then serve as inputs to the next layer, although not every output has to be used by every next neuron. To prevent the network from collapsing into a single linear classifier and thus to increase the expressivity of the network, the output of a neuron is put into a non-linear so-called activation function. Although many different activation functions exist, most popular is the one called \textit{Rectified Linear Unit (\gls{relu})}, which was first presented by Jarrett et al. in \cite{relu}. The function is exemplarily visualized in \fig \ref{fig:relu} and is calculated as
+where $w_i$ is the weight for the $i$-th input $x_i$ and $b$ is a bias. The weights and the bias are the values that can be learned during the training process of the network (see Section \ref{section:network_training}). The output of a layer of the network is the vector $(y_0, \cdots, y_t)$, $y_j$ being the output of the $j$-th neuron. Those outputs then serve as inputs to the next layer, i.e. $y_i$ becomes $x_i$. Not every output has to be used by every next neuron. To prevent the network from collapsing into a single linear classifier and thus to increase the expressivity of the network, the output of a neuron is put into a non-linear so-called activation function. Although many different activation functions exist, most popular is the \textit{Rectified Linear Unit (\gls{relu})}, which was first presented by Jarrett et al. in \cite{relu}. The function is exemplarily visualized in \fig \ref{fig:relu} and is calculated as
 
 \begin{align}
-f(x) = max(0, x)
+f(x) = \max(0, x)
 \end{align} 
 
 \subsection{Feed-Forward Neural Network}
 
-A \textit{Feed-Forward Neural Network} is a network consisting of layers of neurons. The first layer is called the input layer. Those are the neurons that receive the data that the network is supposed to process. The last layer is called the output layer. The output of the neural network depends on the design implied by the use case. It can be object coordinates like in our case, class probabilities in classification tasks or any other real-valued output. The intermediate layers are called hidden layers. Their number can grow to over a hundred in modern networks \cite{resnet}, thus the name deep neural networks and deep learning. All layers can have different numbers of neurons and connections to previous layers. A schematic overview over the structure of a neural network can be seen in \fig \ref{fig:ffnn}. A neural network can be seen as the function $y=f(x,\theta)$, where $\theta$ are the weights and biases of the neurons and some other parameters an $y$ is the output of the network.
+A \textit{Feed-Forward Neural Network} is a network consisting of layers of neurons. The first layer is called the input layer. Those are the neurons that receive the data that the network is supposed to process. The last layer is called the output layer. The form of the output of the neural network depends on the field of application. It can be object coordinates like in our case, class probabilities in classification tasks or any other real-valued output. The intermediate layers are called hidden layers. Their number can grow to over a hundred in modern networks \cite{resnet}, thus the name deep neural networks and deep learning. All layers can have different numbers of neurons and connections to previous layers. A schematic overview over the structure of a neural network is visualized in \fig \ref{fig:ffnn}. The green circles on the left are the neurons of the input layer. The purple neurons in the middle belong to intermediate, i.e. hidden, layers. The output layer consists of the blue neurons on the right. A neural network can generally be seen as the function $y=f(x,\theta)$, where $\theta$ are the weights and biases of the neurons and $y$ is the output of the network.
 
 \subsection{Convolutional Neural Networks}
 
@@ -74,17 +74,32 @@ A \textit{Feed-Forward Neural Network} is a network consisting of layers of neur
 	\caption{The two main layer types of a convolutional neural network.}
 \end{figure} 
 
-A \textit{Convolutional Neural Network (\gls{cnn})} describes a certain type of feed-forward neural network that consists of mainly two types of layers: \textit{Convolutional Layers} and \textit{Pooling Layers}. Normally, one or more convolutional layers are followed by a pooling layer. A convolutional layer convolves its input with a kernel which is moved along the input's dimensions. The kernel weights are shared, i.e. stay the same for the convolution of the whole input. \fig \ref{fig:conv_layer} shows the schematic of a convolutional layer. Each filter of the layer extends the output in the third dimension and has its own kernel. To reduce the size of the data a pooling layer can be added after the convolutional layer. This significantly speeds up computation and reduces the memory needed. It also reduces the number of parameters which helps to prevent the network from overfitting. An overfitted network performs well on the data it was trained on but does not generalize well, thus does not perform well on unseen data. Some architectures draw on a \textit{Fully-Connected Layer} as the last layer to perform the actual classification, etc. In such a layer every neuron is connected to every previous output. Convolutional neural networks are often used in computer vision tasks like image classification, instance segmentation and many more.
+Depending on its depth and number of neurons, a densely connected feed-forward network with individual weights for each neuron needs a lot of memory and computation time to perform operations. A \textit{Convolutional Neural Network (\gls{cnn})} reduces this need for memory and increases computational throughput by sharing the weights of the neurons. This type of network is often employed in computer vision tasks, like image classification and segmentation. A \gls{cnn} introduces two new types of layers: \textit{Convolutional Layers} and \textit{Pooling Layers}. A convolution layer convolves the input using a kernel. This means that the kernel is moved along the input's dimensions and sums up the respective values multiplied by the kernel weights. For a position $(i, j)$ in the input $I$ and a kernel matrix $K$, this can be written as
+
+\begin{align}
+O(i, j) = \sum\limits_{w_0, w_1} I(i + w_0, j + w_1)K(i + w_0, j + w_1) \label{eqn:convolutional_layer}
+\end{align} 
+
+where $O$ is the output. The upper limit of $w_0$ and $w_1$ depend on the size of the convolution window.
+The kernel can be learned but stays the same for the whole convolution. \fig \ref{fig:conv_layer} shows an abstraction of a convolutional layer. The red plane on the left is the input image, the blue cube on the right is the actual layer. The blue cube is broader than the red input because it has multiple filters. Each filter consists of an independent kernel. This means that this layer has multiple outputs, each being a convolution of the input with a different kernel.
+
+A pooling layer can be used to reduce the size of the data between convolution layers. This significantly speeds up computation and reduces memory consumption. It also reduces the number of parameters which helps to prevent the network from overfitting. An overfitted network performs well on the data it was trained on but does not generalize well, i.e. has a significantly lower accuracy on unseen data. A pooling layer alters equation \ref{eqn:convolutional_layer} in the following way:
+
+\begin{align}
+O(i, j) = \max\limits_{w_0, w_1} I(i + w_0, j + w_1)
+\end{align} 
+
+The size of the output of the pooling layer is reduced by a factor depending on the size of the pooling window.
 
 \subsection{Network training} \label{section:network_training}
 
-When a network is created, usually its weights and biases are initialized to 0 or sampled randomly from a Gaussian distribution. To set the parameters to meaningful values that produce the desired output, the network has to be trained. We will now have a look at different techniques how to train a network.
+When a network is created, its weights and biases can be initialized to 0 or sampled randomly from a Gaussian distribution. To set the parameters to meaningful values that produce the desired output, we need to train the network. We will now have a look at different techniques how to train a network.
 
-\subsubsection{Error-Back Propagation} The predominant procedure to train a network is called \textit{Error-Back-Propagation} or \textit{Backpropagation}. To employ backpropagation, a differentiable but arbitrary loss function has to be defined. The loss function measures the error of the output of the network, e.g. by summing up the squared differences of the output and the objective output. The network is then applied to a training example in the so-called forward pass. Next, the loss function is derived with respect to each network weight using the chain rule of calculus. The derivative, the computed and the desired output together yield the change, also called delta, to be applied to the weights of the neuron. This delta is then propagated backwards through the net to calculate the deltas of the layers in between, again using the chain rule. After the deltas for all neurons have been computed, the weights are updated according to an update rule (see next paragraph). 
+\subsubsection{Error-Back Propagation} The predominant procedure to train a network is called \textit{Error-Back-Propagation} or \textit{Backpropagation}. To employ backpropagation, a differentiable but arbitrary loss function has to be defined. The loss function measures the error of the output of the network, e.g. by summing up the squared differences of the output and the objective output. The network is then applied to a training example in the so-called forward pass. Next, the loss function is derived with respect to each weight of the network. The derivative, the computed and the desired output together yield the delta to be applied to the weights. This delta is then also propagated backwards through the net and the deltas of the layers in between are calculated, using the chain rule of calculus. After the deltas for all neurons have been computed, the weights are updated according to an update rule. 
 
-\subsubsection{Optimization} There exist many different patterns how to update the network weights after obtaining the detlas. The \textit{Stochastic Gradient Descent (\gls{sgd})} multiplies the delta by a learning rate and subtracts it from the weight. To ensure convergence, often the learning rate is decreased over time. A more elaborate method is the \textit{Adaptive Moment Optimization (Adam)} \cite{adam} which computes adaptive learning rates for each parameter. Here, an exponentially decaying average over past gradients as well as an exponentially decaying average over the past squared gradients serve to increase the learning rate in case of small gradients and decrease the learning rate in case of large gradients. Both averages are stored for the next iteration. Adam has greatly benefited the training process and proven to decrease computation time by finding local minima faster than \gls{sgd}. Other optimization procedures exist as well but will not be covered here.
+\subsubsection{Optimization} There exist many different patterns how to update the network weights after obtaining the deltas. The \textit{Stochastic Gradient Descent (\gls{sgd})} multiplies the delta by a learning rate and subtracts it from the weight. To ensure convergence, often the learning rate is decreased over time. A more elaborate method is the \textit{Adaptive Moment Optimization (Adam)} \cite{adam} which computes adaptive learning rates for each parameter. An exponentially decaying average over past gradients as well as an exponentially decaying average over the past squared gradients serve to increase the learning rate in case of small gradients and decrease the learning rate in case of large gradients. Both averages are stored for the next iteration. Other optimization procedures exist as well but will not be covered here.
 	
-\subsubsection{Regularization} Regularization can mean various things for neural networks. In general, its purpose is to keep the network from overfitting. Ian Goodfellow defined it in \cite{goodfellow} as any modification that reduces the generalization error but not the training error. Many network architectures regularize the net by adding a penalty term on the weights. Another possibility is to randomly deactivate a portion of the neurons to force the network to compensate the missing information, which is called \textit{Dropout}. \textit{Batchnormalization} helps the network generalize by subtracting the batch mean and batch standard deviation from the output of the previous layer. A batch is a subset of the input data which the network is trained with. This technique is often employed when the underlying machine can't fit the whole dataset in memory and because the network typically trains faster this way. To keep \gls{sgd} or other optimizers from reversing the covariance shift performed by batchnormalization the two parameters \textit{beta} and \textit{gamma} of such a layer are trainable.
+\subsubsection{Regularization} Regularization can mean various things for neural networks. In general, its purpose is to keep the network from overfitting. Ian Goodfellow defined it in \cite{goodfellow} as any modification that reduces the generalization error but not the training error. Many network architectures regularize the net by adding a penalty term on the weights. Another possibility is to randomly deactivate a subset of the neurons to force the network to adapt to this loss of information. This is called \textit{Dropout}. \textit{Batchnormalization} helps the network generalize by subtracting the batch mean and batch standard deviation from the output of the previous layer. A batch is a subset of the input data which the network is trained with. This technique is often employed when the underlying machine can't fit the whole dataset in memory and because the network typically trains faster this way. To keep \gls{sgd} or other optimizers from reversing the covariance shift performed by batchnormalization the two parameters \textit{beta} and \textit{gamma} of such a layer are usually trainable. This way a layer of neurons cannot fully counterpoise the shift. 
 
 \section{6D Pose Estimation}
 
@@ -111,24 +126,15 @@ When a network is created, usually its weights and biases are initialized to 0 o
 	\caption{Example 3D coordinate representations.}
 \end{figure} 
 
-\textit{6D pose estimation} is a central task in the computer vision community. The goal is to retrieve an object's translation and rotation from an image, relative to the camera. \textit{6}D refers to the \textit{6-Degrees-of-Freedom (6-\gls{dof})}, i.e. the 6 free parameters of the \textit{3}D translation and \textit{3}D rotation. The field of application ranges from medical imaging, robotics, augmented reality, and many others. Different systems provide different accuracy. Setups using two cameras for stereo vision or depth information in addition to colors achieve good results. As endoscopes usually do not provide depth information or stereo vision, this work focuses on pose estimation using RGB-only images.
+\textit{6D pose estimation} is a central task in the computer vision community. The goal is to retrieve the translation and rotation of an object, relative to the camera. \textit{6}D refers to the \textit{6-Degrees-of-Freedom (6-\gls{dof})}, i.e. the 6 free parameters of the \textit{3}D translation and \textit{3}D rotation. The field of application ranges from medical imaging, robotics, augmented reality, and many more.
 
-There are different possible ways to estimate the pose with learning-based approaches. The 6 parameters can be predicted directly or an intermediate representation can be used for pose computation. Predicting the parameters directly can be problematic, as the output of the neural network underlies noise and there is no possibility to verify or improve the pose afterwards. This is the reason why this work employs a network with a dense output, i.e. one output  for each pixel. The output for a pixel are the 3D coordinates on the object. Each subset of object coordinates leads to a certain pose. Some coordinates may contradict a pose and therefore the pose with the least contradictions is chosen as the best one. The next section will introduce this concept of so-called object coordinates in depth.
+There are different possible ways to estimate the pose with learning-based approaches. The 6 parameters can be predicted directly or an intermediate representation can be used for pose computation. Predicting the parameters offers no possibility to verify or improve the pose afterwards. A possible intermediate representation are object coordinates. This means that the 3D locations on the object are predicted for the 2D pixels in the input image. Each subset of object coordinates leads to a certain pose. The next section will introduce this concept of so-called object coordinates in depth.
 
 \subsection{Object Coordinate Regression} \label{objectcoordinates}
 
-\begin{figure}[!tbp]
-	\centering
-    \includegraphics[width=0.45\linewidth]{pnp}
-    \caption{The relationship between the camera, the 3D points and their projections on the screen using the rotation matrix $R$ and the translation vector $t$. Image from \cite{opencv_pnp}.}
-    	\label{fig:pnp}
-\end{figure} 
+Tayler \etal first used object coordinates in \cite{tsharp}. Instead of directly predicting the location of joints or limbs of the human body they computed the corresponding 3D location on the person (see \fig \ref{fig:human_object_coordinates}) for each pixel. The idea can be transfered to objects of any kind. \fig \ref{fig:tless_object} shows an example object from the T-Less dataset \cite{tless} and \fig \ref{fig:tless_object_coordinates} shows the corresponding rendered 3D object coordinates.
 
-Tayler et al. first used object coordinates in \cite{tsharp}. Instead of directly predicting the location of joints or limbs of the human body they computed for each pixel the corresponding 3D location on the person (see \fig \ref{fig:human_object_coordinates}). The idea can be transfered to objects of any kind. \fig \ref{fig:tless_object} shows an example object from the T-Less dataset \cite{tless} and \fig \ref{fig:tless_object_coordinates} shows the corresponding rendered 3D object coordinates.
-
-
-TODO: this is not entirely correct
-The 3D coordinates and the respective 2D pixel locations on the image yield the \textit{Perspective-n-Point (\gls{pnp}) Problem}. That is, for a given pixel $p$ on the image and the corresponding 3D point $x$ (both in homogeneous coordinates), a pose consisting of the rotation matrix $R$ and the translation vector $t$ has to fulfill the following equation
+The 2D-3D correspondences between object coordinates and pixels yield the \textit{Perspective-n-Point (\gls{pnp}) Problem}. For a given pixel $p$ in the image and the corresponding 3D point $x$ (both in homogeneous coordinates), a pose consisting of the rotation matrix $R$ and the translation vector $t$ has to fulfill the following equation
 
 \begin{align}
  p = K \ [ \ R \ | \ t \ ] \ x \label{eq:pose_projection}
@@ -144,9 +150,16 @@ f_x & s & c_x \\
 \end{bmatrix}
 \end{align}
 
-which projects the 3D point transformed into the camera coordinate system on the 2D image plane. $s$ is a skew factor which is usually $0$, $(c_x, c_y)$ is the principal point, usually the center of the image and $f_x$ and $f_y$ is the focal lengths in $x$ and $y$ direction respectively. The values for those variables can vary when for example cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables it cannot be solved directly.
+which projects the 3D point transformed into the camera coordinate system on the 2D image plane. $s$ is a skew factor which is usually $0$, $(c_x, c_y)$ is the principal point, usually the center of the image and $f_x$ and $f_y$ is the focal lengths in $x$ and $y$ direction respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables it cannot be solved directly.
 
-A method to solve the \gls{pnp} problem for many correspondences is to use the \textit{\gls{ransac} algorithm} \cite{ransac}. \gls{ransac} selects a model based on a subset of the dataset and evaluates it against the remaining data. This way the approximate best model is found iteratively. Algorithm \ref{algorithm:ransac} shows the outline of the \gls{ransac} algorithm for pose estimation. The energy function can be varied. It can for example be the number of inliers. Inliers are 3D points whose reprojected 2D location is within a certain area of the actual 2D location. Since \gls{ransac} is well known and employed in many different applications to estimate a model that fits a dataset best, we use it in this work to compute the pose. The implementation that is used is the one incorporated into the \textit{solvePnPRansac} method of the \textit{OpenCV} \cite{opencv} framework. 
+\begin{figure}[!tbp]
+	\centering
+    \includegraphics[width=0.45\linewidth]{pnp}
+    \caption{The relationship between the camera, the 3D points and their projections on the screen defined by the rotation matrix $R$ and the translation vector $t$. Image from \cite{opencv_pnp}.}
+    	\label{fig:pnp}
+\end{figure} 
+
+A method to solve the \gls{pnp} problem for many correspondences is to use the \textit{\gls{ransac} algorithm} \cite{ransac}. \gls{ransac} selects a model based on a subset of the dataset and evaluates it using the energy function. This way the approximate best model is found iteratively. Algorithm \ref{algorithm:ransac} shows the outline of the \gls{ransac} algorithm for pose estimation. The energy function can be arbitrary but should capture the quality of the pose. It could count the number of inliers, i.e. the number of 3D points whose reprojection-error is within a certain threshold, for example.
 
 \begin{algorithm}
 \caption{RANSAC} \label{algorithm:ransac}
