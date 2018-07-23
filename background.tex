@@ -61,14 +61,14 @@ A \textit{Feed-Forward Neural Network} is a network consisting of layers of neur
 	\begin{subfigure}[t]{0.45\textwidth}
 		\centering
     	\includegraphics[width=0.7\linewidth]{conv_layer}
-    	\caption{Example convolutional layer. The input image has dimensions 32x32 and 3 channels. The blue volume is the actual convolutional layer with multiple filters.}
+    	\caption{Example convolutional layer. The input image has dimensions 32x32 and 3 channels. The blue volume is the actual convolutional layer with multiple filters. Image from \cite{convolutional_layer_image}.}
     	\label{fig:conv_layer}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.5\textwidth}
 		\centering
     	\includegraphics[width=0.9\linewidth]{pool_layer}
-    	\caption{Example pooling layer with maximum as pooling operation.}
+    	\caption{Example pooling layer with maximum as pooling operation. Image from \cite{pooling_layer_image}.}
     	\label{fig:pool_layer}
 	\end{subfigure}
 	\caption{The two main layer types of a convolutional neural network.}
@@ -99,7 +99,7 @@ When a network is created, its weights and biases can be initialized to 0 or sam
 
 \subsubsection{Optimization} There exist many different patterns how to update the network weights after obtaining the deltas. The \textit{Stochastic Gradient Descent (\gls{sgd})} multiplies the delta by a learning rate and subtracts it from the weight. To ensure convergence, often the learning rate is decreased over time. A more elaborate method is the \textit{Adaptive Moment Optimization (Adam)} \cite{adam} which computes adaptive learning rates for each parameter. An exponentially decaying average over past gradients as well as an exponentially decaying average over the past squared gradients serve to increase the learning rate in case of small gradients and decrease the learning rate in case of large gradients. Both averages are stored for the next iteration. Other optimization procedures exist as well but will not be covered here.
 	
-\subsubsection{Regularization} Regularization can mean various things for neural networks. In general, its purpose is to keep the network from overfitting. Ian Goodfellow defined it in \cite{goodfellow} as any modification that reduces the generalization error but not the training error. Many network architectures regularize the net by adding a penalty term on the weights. Another possibility is to randomly deactivate a subset of the neurons to force the network to adapt to this loss of information. This is called \textit{Dropout}. \textit{Batchnormalization} helps the network generalize by subtracting the batch mean and batch standard deviation from the output of the previous layer. A batch is a subset of the input data which the network is trained with. This technique is often employed when the underlying machine can't fit the whole dataset in memory and because the network typically trains faster this way. To keep \gls{sgd} or other optimizers from reversing the covariance shift performed by batchnormalization the two parameters \textit{beta} and \textit{gamma} of such a layer are usually trainable. This way a layer of neurons cannot fully counterpoise the shift. 
+\subsubsection{Regularization} Regularization can mean various things for neural networks. In general, its purpose is to keep the network from overfitting. Ian Goodfellow defined it in \cite{goodfellow} as any modification that reduces the generalization error but not the training error. Many network architectures regularize the net by adding a penalty term on the weights. Another possibility is to randomly deactivate a subset of the neurons to force the network to adapt to this loss of information. This is called \textit{Dropout}. \textit{Batch Normalization} helps the network generalize by subtracting the batch mean and batch standard deviation from the output of the previous layer. A batch is a subset of the input data which the network is trained with. This technique is often employed when the underlying machine can't fit the whole dataset in memory and because the network typically trains faster this way. To keep \gls{sgd} or other optimizers from reversing the covariance shift performed by batch normalization the two parameters \textit{beta} and \textit{gamma} of such a layer are usually trainable. This way a layer of neurons cannot fully counterpoise the shift. 
 
 \section{6D Pose Estimation}
 
