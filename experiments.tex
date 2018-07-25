@@ -44,6 +44,10 @@ This section describes the configuration of the different training experiments, 
 
 We used the first network architecture to compare the \gls{sgd} and Adam optimizer. The first network architecture consists of 23 layers and has a receptive field-size of 99 per output pixel. The decreasing learning rates for \gls{sgd} were set to ... TODO: insert learning rates, $\beta_1$ and $\beta_2$ of the Adam optimizer were left at the default values set by Keras, which are $0.9$ and $0.999$, respectively. Fig. \ref{todo} shows the loss of both experiments during training. Since Adam declines much faster than \gls{sgd}, we chose Adam as the optimizer for all other experiments.
 
+\subsection{Loss Functions}
+
+% L1 vs L2 loss
+
 \subsection{Architectures} \label{subsection:architectures}
 
 The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned above. The major difference between the experiments is the architecture itself. The training process were run for a different number of iterations because some architectures converged earlier than others. The different losses are displayed in fig. \ref{todo}.
@@ -58,6 +62,10 @@ The experiments run on the different architectures were all performed using the 
 
 % T-Less dataset contains only unoccluded images
 
+% This way of comparing is owned to the timeframe of this work -> maybe L2 works better for model 5, etc. 
+
+% Create metric for images that the network produces bad predictions for, e.g. reprojection error for contradicting object coordinates, difference between segmentation mask rendered using the predicted pose and the ground-truth segmentation mask -> was not possible because we couldn't annotate images of the Endovis dataset
+
 \subsection{Runtime Analysis}
 
-This section analyses the inference runtimes of the different architectures. Deeper networks need longer to perform an inference run on an image, which is reflected by table ...
+This section analyses the inference runtimes of the different architectures. Deeper networks need longer to perform training and an inference run on an image, which is reflected by table ...
