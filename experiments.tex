@@ -38,6 +38,8 @@ The \textit{T-Less} dataset does not provide 3D object coordinates. This is the 
 
 \section{Training Experiments}
 
+%TODO state that we only used the first object model from T-Less which resulted in the image dim of 500
+
 This section describes the configuration of the different training experiments, i.e. which model was used, how many images, etc. The chronological order of the experiments is reflected here. First, we compare the \gls{sgd} and Adam optimizer in \ref{subsection:optimizers}. Then we evaluate the different architectures against each other in \ref{subsection:architectures}. Finally, asses the two training strategies training from scratch and incremental training in \ref{subsection:training_strategies}.
 
 \subsection{Optimizers} \label{subsection:optimizers}
@@ -50,11 +52,21 @@ We used the first network architecture to compare the \gls{sgd} and Adam optimiz
 
 \subsection{Architectures} \label{subsection:architectures}
 
+%TODO table of training parameters
+
 The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned above. The major difference between the experiments is the architecture itself. The training process were run for a different number of iterations because some architectures converged earlier than others. The different losses are displayed in fig. \ref{todo}.
 
-\subsection{Training Strategies} \label{subsection:training_strategies}
+\subsection{Online Learning} \label{subsection:training_strategies}
 
 % Nochmal zusammenfassen scratch vs inkrementell
+
+\subsection{Active Learning}
+
+% Training on one side only -> provide metric results -> training on bad images -> new metrics
+
+\subsection{Runtime Analysis}
+
+This section analyses the inference runtimes of the different architectures. Deeper networks need longer to perform training and an inference run on an image, which is reflected by table ...
 
 \subsection{Limitations}
 
@@ -62,10 +74,6 @@ The experiments run on the different architectures were all performed using the 
 
 % T-Less dataset contains only unoccluded images
 
-% This way of comparing is owned to the timeframe of this work -> maybe L2 works better for model 5, etc. 
+% This way of comparing training procedures is owned to the timeframe of this work -> maybe L2 works better for model 5, etc., we generalize from one model to all others
 
 % Create metric for images that the network produces bad predictions for, e.g. reprojection error for contradicting object coordinates, difference between segmentation mask rendered using the predicted pose and the ground-truth segmentation mask -> was not possible because we couldn't annotate images of the Endovis dataset
-
-\subsection{Runtime Analysis}
-
-This section analyses the inference runtimes of the different architectures. Deeper networks need longer to perform training and an inference run on an image, which is reflected by table ...

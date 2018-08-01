@@ -1,8 +1,10 @@
 \documentclass[color]{tudscrreprt}
+\usepackage[toc,page]{appendix}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage[T1]{fontenc}
 \usepackage[nottoc,numbib]{tocbibind}
+\usepackage[export]{adjustbox}
 \usepackage{appendix}
 \usepackage{color, colortbl}
 \usepackage{algorithm}
@@ -41,11 +43,12 @@ Generation
 \referee{Eric Brachmann}
 \maketitle
 
+\include{task}
+
 \begin{abstract}
 Here is an abstract.
 \end{abstract}
 
-\includepdf[pages={1,2}]{stuff/task.pdf}
 
 \tableofcontents
 

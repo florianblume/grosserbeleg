@@ -5,7 +5,7 @@
 	\begin{minipage}[t]{0.45\textwidth}
 		\centering
     	\includegraphics[width=0.8\linewidth]{ffnn}
-    	\caption{Abstract structure of a feed-forward neural network. Most networks have more layers and more neurons per layer. Own figure.}
+    	\caption{Abstract structure of a feed-forward neural network. Most networks have more layers and more neurons per layer.}
     	\label{fig:ffnn}
     \end{minipage}
 	\hfill
@@ -27,7 +27,7 @@
     			\addplot [mark=none,  blue,   ultra thick] {max(0, x)}; 
   			\end{axis}
 		\end{tikzpicture}
-    	\caption{Visualization of the ReLU activation function $f(x) = \max(0, x)$. Own figure.}
+    	\caption{Visualization of the ReLU activation function $f(x) = \max(0, x)$.}
     	\label{fig:relu}
     \end{minipage}
 \end{figure} 
@@ -80,7 +80,7 @@ Depending on its depth and number of neurons, a densely connected feed-forward n
 O(i, j) = \sum\limits_{w_0, w_1} I(i + w_0, j + w_1)K(i + w_0, j + w_1) \label{eqn:convolutional_layer}
 \end{align} 
 
-where $O$ is the output. The upper limits of $w_0$ and $w_1$ depend on the size of the convolution window.
+where $O$ is the output. The ranges of $w_0$ and $w_1$ depend on the size of the convolution window.
 The kernel can be learned but stays the same for the whole convolution. \fig \ref{fig:conv_layer} shows an abstraction of a convolutional layer. The red plane on the left is the input image, the blue cube on the right is the actual layer. The blue cube is broader than the red input because it has multiple filters. Each filter consists of an independent kernel. This means that this layer has multiple outputs, each being a convolution of the input with a different kernel.
 
 A pooling layer can be used to reduce the size of the data between convolution layers. This significantly speeds up computation and reduces memory consumption. It also reduces the number of parameters which helps to prevent the network from overfitting. An overfitted network performs well on the data it was trained on but does not generalize well, i.e. has a significantly lower accuracy on unseen data. A pooling layer alters equation \ref{eqn:convolutional_layer} in the following way:
@@ -122,7 +122,7 @@ A network's weights and biases can be initialized to 0 or sampled randomly from 
 	\begin{subfigure}[t]{0.29\textwidth}
 		\centering
     	\includegraphics[width=0.45\linewidth]{tless_object_coordinates}
-    	\caption{The corresponding rendered 3D object coordinates (scaled for visualization). Own image.}
+    	\caption{The corresponding rendered 3D object coordinates (scaled for visualization).}
     	\label{fig:tless_object_coordinates}
 	\end{subfigure}
 	\caption{Example 3D coordinate representations.}
@@ -136,10 +136,10 @@ There are different possible ways to estimate the pose with learning-based appro
 
 Tayler \etal first used object coordinates in \cite{tsharp}. Instead of directly predicting the location of joints or limbs of the human body, they computed the corresponding 3D location on the person for each pixel (see \fig \ref{fig:human_object_coordinates}). This idea can be transfered to objects of any kind. \fig \ref{fig:tless_object} shows an example object from the T-Less dataset \cite{tless} and \fig \ref{fig:tless_object_coordinates} shows the corresponding rendered 3D object coordinates.
 
-The 2D-3D correspondences between object coordinates and pixels yield the \textit{Perspective-n-Point (\gls{pnp}) Problem}. For a given pixel $u$ in the image and the corresponding 3D point $x$ (both in homogeneous coordinates), a pose consisting of the rotation matrix $R$ and the translation vector $t$ has to fulfill the equation
+The 2D-3D correspondences between object coordinates and pixels yield the \textit{Perspective-n-Point (\gls{pnp}) Problem}. For a given 2D location $u$ in the image and the corresponding 3D point $p$, a pose consisting of the rotation matrix $R$ and the translation vector $t$ has to fulfill the equation
 
 \begin{align}
- u = K \ [ \ R \ | \ t \ ] \ x \label{eq:pose_projection}
+ u = K \ [ \ R \ | \ t \ ] \ p \label{eq:pose_projection}
 \end{align} 
  
 \noindent where $K$ is the camera matrix
@@ -152,7 +152,7 @@ f_x & s & c_x \\
 \end{bmatrix}
 \end{align}
 
-\noindent which projects the 3D point transformed into the camera coordinate system on the 2D image plane. The skew factor $s$ is usually $0$. The principal point $(c_x, c_y)$ normally is the center of the image and $f_x$ and $f_y$ are the focal lengths in $x$ and $y$ direction, respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables, it cannot be solved directly.
+\noindent which projects the 3D point transformed into the camera coordinate system on the 2D image plane. The points $u$ and $p$ are both in homogeneous coordinates, i.e. $u = \begin{bmatrix} u \\ v \\ 1 \end{bmatrix}$ and $p = \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$. The skew factor $s$ is usually $0$. The principal point $(c_x, c_y)$ normally is the center of the image and $f_x$ and $f_y$ are the focal lengths in $x$ and $y$ direction, respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables, it cannot be solved directly.
 
 \begin{figure}[!tbp]
 	\centering
