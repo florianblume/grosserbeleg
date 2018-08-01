@@ -37,7 +37,7 @@ The following chapter analyzes the manual 6D pose annotation process and its pre
 	\begin{subfigure}[t]{0.47\textwidth}
 	\centering
     	\includegraphics[width=0.8\linewidth]{sfb_segmentation}
-    	\caption{The segmentation mask belonging to the image in fig \ref{fig:sfb_original}. The colors encode the tools' classes. Image from \cite{endovis}.}
+    	\caption{The corresponding segmentation mask. The colors encode the tools' classes. Image from \cite{endovis}.}
     	\label{fig:sfb_segmentation}
 	\end{subfigure}
 	\caption{An example image and its corresponding segmentation mask from the Endoscopic Vision Challenge dataset.}
@@ -50,7 +50,7 @@ The goal of this work is to provide a system to successfully and efficiently ann
 
 \section{6D Pose Annotation Tool (6D-PAT)}
 
-The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (\gls{ui}s). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the Endoscopic Vision Challenge in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and named \textit{6D - Pose Annotation Tool (\gls{6dpat})}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. We developed the program on the \textit{Linux}-based operating system \textit{Ubuntu} but it is compatible to other operating systems, as well.
+The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (UIs). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the Endoscopic Vision Challenge in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and named \textit{6D - Pose Annotation Tool (6D-PAT)}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. We developed the program on the \textit{Linux}-based operating system \textit{Ubuntu} but it is compatible to other operating systems, as well.
 
 \subsection{Requirements}
 
@@ -69,7 +69,7 @@ All necessary dependencies of the tool are listed below. The user needs to compi
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=0.8\linewidth]{mvc}
-    	\caption{The Model-View-Controller architecture. The solid lines stand for a direct connection either because the target is owned or known by reference. The dashed line is an indirect connection realized using the observer pattern or the Qt Signals and Slots mechanism visible in \fig \ref{fig:qt_signals_slots}.}
+    	\caption{The Model-View-Controller architecture. The solid lines stand for a direct connection either because the target is owned or known by reference. The dashed line is an indirect connection realized using the observer pattern or the Qt Signals and Slots mechanism.}
     	\label{fig:mvc}
 	\end{subfigure}
 	\hfill
@@ -79,7 +79,7 @@ All necessary dependencies of the tool are listed below. The user needs to compi
     	\caption{The Signals and Slots mechanism of Qt. A class can define signals which can be emitted. Slots are functions that can be connected to signals. When a signal is emitted, all connected slots will be called. Image from \cite{qt_signals_and_slots}.}
     	\label{fig:qt_signals_slots}
 	\end{subfigure}
-	\caption{Two basic architectural concepts used in \gls{6dpat}: the model view controller pattern and the signal and slots pattern.}
+	\caption{Two basic architectural concepts used in 6D-PAT: the model view controller pattern and the signal and slots pattern.}
 \end{figure} 
 
 \noindent\textbf{OpenGL.} \textit{OpenGL} \cite{opengl} is a widespread open-source 3D graphics library specification. Implementations of the specification exist for many different operating systems, which makes applications using OpenGL portable. \\
@@ -90,12 +90,12 @@ All necessary dependencies of the tool are listed below. The user needs to compi
 
 \subsection{Architecture \& Code Design}
 
-\gls{6dpat} is primarily a UI program, i.e. its purpose is to display a window and enable optical interaction for the user, like clicking. Thus, we chose the \textit{Model-View-Controller (\gls{mvc})} pattern as the underlying architecture. \gls{mvc} separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \gls{mvc} architecture is shown in \fig \ref{fig:mvc}. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots without directly writing code and is part of the standard Qt framework.
+6D-PAT is primarily a UI program, i.e. its purpose is to display a window and enable optical interaction for the user, like clicking. Thus, we chose the \textit{Model-View-Controller (MVC)} pattern as the underlying architecture. MVC separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the MVC architecture is shown in \fig \ref{fig:mvc}. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots without directly writing code and is part of the standard Qt framework.
 
 \begin{figure}[!tbp]
        \centering
    \includegraphics[width=\linewidth]{6dpat_class_diagram}
-    \caption{An abstract high-level class diagram of a subset of the classes of \gls{6dpat}. The large rectangles show the affiliation of a contained class in the MVC pattern. Arrows between those rectangles imply which class can use which target class, although not all classes of the source rectangle necessarily use all classes of the target rectangle. Small filled-out arrows imply a use relationship, while the not filled-out arrow heads indicate inheritance.}
+    \caption{An abstract high-level class diagram of a subset of the classes of 6D-PAT. The large rectangles show the affiliation of a contained class in the MVC pattern. Arrows between those rectangles imply which class can use which target class, although not all classes of the source rectangle necessarily use all classes of the target rectangle. Small filled-out arrows imply a use relationship, while the not filled-out arrow heads indicate inheritance.}
    \label{fig:6dpat_class_diagram}
 \end{figure}
 
@@ -119,7 +119,7 @@ Some classes are not displayed in \fig \ref{fig:6dpat_class_diagram}. We created
 
 \subsection{Manual Annotation} 
 
-This section describes the user interface of \gls{6dpat} and the steps required to annotate images with 6D poses. 
+This section describes the user interface of 6D-PAT and the steps required to annotate images with 6D poses. 
 
 \subsubsection{Preparation}
 
@@ -128,14 +128,14 @@ This section describes the user interface of \gls{6dpat} and the steps required 
 	\begin{subfigure}[t]{\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_components}
-    	\caption{The user interface of the annotation tool \gls{6dpat}. The displayed images and object models are from the T-Less dataset. The following components are marked with a turquoise box: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The \textit{Images Gallery} showing the images loaded from the selected path. \textbf{C}: The \textit{Pose Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D starting point of a correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The \textit{Objects Gallery} of rendered 3D previews of the object models loaded from the selected path. \textbf{F}: The \textit{Pose Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. The controls at the bottom can be used to edit existing poses.}
+    	\caption{The user interface of the annotation tool 6D-PAT. The displayed images and object models are from the T-Less dataset. The following components are marked with a turquoise box: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The \textit{Images Gallery} showing the images loaded from the selected path. \textbf{C}: The \textit{Pose Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D starting point of a correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The \textit{Objects Gallery} of rendered 3D previews of the object models loaded from the selected path. \textbf{F}: The \textit{Pose Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. The controls at the bottom can be used to edit existing poses.}
     	\label{fig:6dpat_components}
 	\end{subfigure}
 	\par\bigskip
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_settings}
-    	\caption{The settings dialog of \gls{6dpat}. The dialog allows editing of the paths where the program loads images, object models and poses from.}
+    	\caption{The settings dialog of 6D-PAT. The dialog allows editing of the paths where the program loads images, object models and poses from.}
     	\label{fig:6dpat_settings}
 	\end{subfigure}
 	\hfill
@@ -145,7 +145,7 @@ This section describes the user interface of \gls{6dpat} and the steps required 
     	\caption{The tab of the settings dialog that can be used to assign colors to the object models.}
     	\label{fig:6dpat_settings_codes}
 	\end{subfigure}
-	\caption{The UI of \gls{6dpat}.}
+	\caption{The UI of 6D-PAT.}
 	\label{fig:6dpat_ui_overview}
 \end{figure}
 
@@ -163,6 +163,7 @@ If required, the user can assign colors to the object models using the settings 
 \centering
     \begin{tabular}{|c||ccccc|} \hline
 \diagbox{\# Object}{Image} & 0000.jpg & 0150.jpg & 0250.jpg & 0350.jpg & 0500.jpg \\ \hline\hline
+\rowcolor{Gray}
 01           &  2:30 min & 1:23 min & 2:05 min & 3:06 min & 0:50 min \\ 
         15 & 2:16 min & 1:51 min & 1:35 min & 2:20 min & 3:07 min \\ \hline
 \end{tabular}
@@ -219,10 +220,10 @@ While trying to annotate the images of the Endoscopic Vision Challenge dataset, 
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
-    	\caption{The corresponding segmentation image to image \ref{fig:6dpat_sfb_image}. The discrepancy between the segmentation masks and the object model is the clearly visible green area.}
+    	\caption{The corresponding segmentation image. The discrepancy between the segmentation masks and the object model is the clearly visible green area.}
     	\label{fig:6dpat_sfb_segmentation}
 	\end{subfigure} 
-	\caption{Example annotations of images of the Endoscopic Vision Challenge dataset (originals depicted in \fig \ref{fig:sfb}). The object model is taken from \cite{3d_scalpel_online}.}
+	\caption{Example annotations of images of the Endoscopic Vision Challenge dataset. The object model is taken from \cite{3d_scalpel_online}.}
 	\label{fig:6dpat_sfb}
 \end{figure} 
 
