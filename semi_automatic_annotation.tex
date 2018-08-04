@@ -3,7 +3,7 @@
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=\linewidth]{network_pipeline}
-    \caption{The pipeline of the neural network. The two inputs of the network are the image and the corresponding segmentation image. The neural network then uses the segmentation to retrieve the pixels to predict object coordinates for. In the final pose computation stage the object coordinates and their 2D locations are used to retrieve the best pose using RANSAC.}
+    \caption{The pipeline of the neural network. The two inputs of the network are the image and the corresponding segmentation image. The neural network then uses the segmentation to retrieve the pixels to predict object coordinates for. In the final pose computation stage the object coordinates and their 2D locations are used to retrieve the best pose using \ac{ransac}.}
     	\label{fig:network_pipeline}
 \end{figure} 
 
@@ -26,6 +26,8 @@ To assist in the process of manual image annotation presented in Chapter \ref{ch
 \noindent\textbf{L2 Loss.} The \textit{L2 loss} is a loss function defined similarly to the L1 loss but sums up the squared instead of the absolute results of $g$, i.e. $L_2(x, y) = \frac{1}{k} \sum\limits_k g(x_k, y_k)^2$. \\
 
 \noindent\textbf{L2 Regularization.} \textit{L2 regularization} penalizes the weights by a factor $\lambda$ in the following way: $\lambda \sum\limits_i w_i^2$. The regularization term is added to the weight update to keep the network from overfitting. \\
+
+\noindent\textbf{Error.} The \textit{error} is the error made by the network computed using the loss function. It is essentially the discrepancy between the desired output and the output of the network. It is also called \textit{error rate} or \textit{loss} or, when the loss is computed only on the training data, \textit{training error} or \textit{validation error}, when computed on the validation set. \\
 
 \noindent\textbf{Dropout Percentage.} \textit{Dropout percentage} is the percentage of neurons to deactivate in a layer during training. \\
 
@@ -62,15 +64,15 @@ The architecture of the network is adjusted to the problem domain of the images 
 
 The basic architecture that we chose for the network is called ResNet. He \etal first presented ResNet in 2015, which enabled researchers to create deeper networks than before \cite{resnet}. Two major problems arise in very deep neural networks. One is the vanishing gradients problem, which means that gradients gradually become 0 in deeper layers. A 0 gradient implies that the weights won't be changed. This problem can be targeted with batch normalization. The scond problem is that making a network deeper without further adjustments can lead to an increasing training eror. Adding layers to a network to increase expressivity does not directly lead to a higher accuracy. Even stacking identity layers, i.e. layers that learn the mathmatical identity function $f(x) = x$, ontop of the network increases the training error. This phenomenom can be partly compensated with residual connections \cite{resnet}. An example of a residual connection can be seen in \fig \ref{fig:residual_connection}. Fig. \ref{fig:resnet_comparison} shows a comparison of ResNet with the architecture \textit{VGG} \cite{vgg}. The residual connections are clearly visible as the arcs of the rightmost architecture.
 
-We chose ResNet over other architectures due to its easy scalability and its still superior performance in terms of accuracy. Mask RCNN is a prominent example that makes use of ResNet's structure \cite{mask_rcnn}. The Facebook AI Research team developed Mask RCNN. The network is still ranking within the top 5 networks of the MS COCO challenge, as of July 2018. The MS COCO challenge is a challenge on image segmentation and object detection \cite{mscoco}.
+We chose ResNet over other architectures due to its easy scalability and its still superior performance in terms of accuracy. \textit{Mask RCNN} is a prominent example that makes use of ResNet's structure \cite{mask_rcnn}. The Facebook AI Research team developed Mask RCNN. The network is still ranking within the top 5 networks of the MS COCO challenge, as of July 2018. The MS COCO challenge is a challenge on image segmentation and object detection \cite{mscoco}.
 
-The structure of the network is visualized in \fig \ref{fig:network_architecture}. The depicted architecture has 23 convolutional layers. The building blocks of the network are the \textit{Conv Block} and the \textit{ID Block}. Both blocks are shown in detail on the right. A Conv Block applies another convolution to the shortcut connection on the right and then combines the result with the output of the left path. The ID Block simply adds the input to the result of the convolutions on the left. The figure doesn't show the batch normalization and \textit{activation layers} to keep the illustration clear. The actual network has a batch normalization layer after each convolution layer and an activation layer after each batch normalization layer. Activation layers are layers in Keras that apply a specified activation function to their input. This way, non-linear neurons are realized in the framework.
+The structure of the network is visualized in \fig \ref{fig:network_architecture}. The depicted architecture has 23 convolutional layers. The building blocks of the network are the \textit{Conv Block} and the \textit{ID Block}. Both blocks are shown in detail on the right. A Conv Block applies another convolution to the shortcut connection on the right and then combines the result with the output of the left path. The ID Block simply adds the input to the result of the convolutions on the left. The figure doesn't show the batch normalization and \textit{activation layers} to keep the illustration clear. The actual network has a batch normalization layer after each convolution layer and an activation layer after each batch normalization layer. Activation layers are layers in Keras that apply a specified activation function to their input. This way, non-linear neurons are realized in the framework. All layers employ the \ac{relu} activation function.
 
 \subsection{Loss Function \& Optimizer}
 
 %TODO re-read
 
-Since the network outputs the 3D coordinates for each pixel in the input image a straight-forward approach is to penalize the euclidean distance with respect to the ground-truth coordinates. The loss function sums up the absolute distances of the individual XYZ components of the predicted object coordinate and the ground-truth, but only at the relevant positions according to the segmentation mask. This resembles the L1 loss (see Section \ref{section:network_terminology}). The reason why we chose the L1 loss over the L2 loss is that the L2 loss penalizes outliers more. Outliers will already get eliminated in the RANSAC algorithm during pose computation. The L2 loss might strive for a worse compromise. We used L2 regularization for the weights. We compared SGD and Adam to find the best optimizer for the network (see Chapter \ref{chapter:background} for details on the optimizers).
+Since the network outputs the 3D coordinates for each pixel in the input image a straight-forward approach is to penalize the euclidean distance with respect to the ground-truth coordinates. The loss function sums up the absolute distances of the individual $XYZ$ components of the predicted object coordinate and the ground-truth, but only at the relevant positions according to the segmentation mask. This resembles the L1 loss (see Section \ref{section:network_terminology}). The reason why we chose the L1 loss over the L2 loss is that the L2 loss penalizes outliers more. Outliers will already get eliminated in the \ac{ransac} algorithm during pose computation. The L2 loss might strive for a worse compromise. We compared \ac{sgd} and Adam to find the best optimizer for the network (see Chapter \ref{chapter:background} for details on the optimizers).
 
 \begin{figure}[!tbp]
 	\centering
@@ -82,6 +84,10 @@ Since the network outputs the 3D coordinates for each pixel in the input image a
 \subsection{Variations} \label{section:network_variations}
 
 %TODO re-read
+
+%TODO batch-norm was omitted because it supposedly has a bad influence on training for small batches
+
+%TODO why did we try out different depths of the architectures?
 
 \begin{table}[]
 \centering
@@ -102,11 +108,6 @@ To find the optimal network structure a total of 6 network architectures were cr
 
 The number of parameters does not scale linearly with the number of layers, as deeper layers have more filters in the network. The reason why architecture 3 has more trainable parameters than architecture 1 is not entirely clear. The difference between the two networks is that architecture 3 uses a reduced kernel size on deeper layers to obtain a smaller receptive field-size. But this should not cause the number of parameters to grow in a fashion that is visible in the table.
 
-%TODO reformulate
-The reason why such diverse architectures were compared is that a focus of this work is to provide a prediction system that already produces satisfactory results with few images. A network with a higher number of trainable parameters can take longer to learn the training data and might overfit to it. A shallower network might produce worse results after the first training, but subsequently offer a better accuracy  as soon as more data is available.
-
-%TODO refernce appendix
-
 The different depths of the network architectures are visualized in appendix \ref{appendix:network_architectures}. The architectures that omit the batch normalization layers and employ dropout layers instead are not listed separately, because the depth of the convolutional layers is the same as in architecture 5.
 
 \section{Setup}
@@ -122,7 +123,7 @@ Before the user can run the network to train on a dataset, some steps to setup t
     	\label{fig:semi_automatic_workflow}
 \end{figure}
 
-The goal of the neural network is to make the annotation process presented in chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training the neural network can be used to predict predict poses in unseen images. As the network will likely make errors, the poses can be corrected afterwards using 6D-PAT. The improved pose predictions can serve as input to further train the network. A characteristic of the Endoscopic Vision Challenge dataset is that there aren't existing any annotated poses. Training the network is thus not as straightforward compared to a fully annotated dataset. The following sections describe different approaches of training the network, which are evaluated in Chapter \ref{chapter:experiments}.
+The goal of the neural network is to make the annotation process presented in chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training the neural network can be used to predict predict poses in unseen images. As the network will likely make errors, the poses can be corrected afterwards using \ac{6dpat}. The improved pose predictions can serve as input to further train the network. A characteristic of the Endoscopic Vision Challenge dataset is that there aren't existing any annotated poses. Training the network is thus not as straightforward compared to a fully annotated dataset. The following sections describe different approaches of training the network, which are evaluated in Chapter \ref{chapter:experiments}.
 
 %TODO rewrite
 

@@ -1,13 +1,14 @@
+%TODO provide example ground-truth object coordinates and predictions
+
 \chapter{Experiments} \label{chapter:experiments}
 
 The following section describes the setups of the experiments conducted with the neural network presented in chapter \ref{chapter:semi_automatic}. Due to the lack of existing annotated medical data the focus of the experiments is to ascertain a network design and mode of operation that compensate this as best as possible. First, we test the different network architectures that were described in section \ref{section:network_variations} using the same parameters. We then choose the best architecture for further experiments, in which we evaluate the two different training schemes introduced in section \ref{section:modes_of_operation}: training from scratch and incremental training.
 
 \section{Terminology}
 
-\noindent\textbf{Hyper Parameter.} \textit{Hyper parameters} are the tunable parameters of a network. The number and kind of parameters varies with the used type of network architecture, optimizer, etc.
+\noindent\textbf{Hyper-Parameter.} \textit{Hyper-parameters} are the tunable parameters of a network. The number and kind of parameters varies with the used type of network architecture, optimizer, etc.
 
 \section{Datasets}
-
 
 \begin{figure}[!tbp]
 	\centering
@@ -36,11 +37,13 @@ The T-Less dataset was released in 2017 by Hoda\v{n} et al. \cite{tless}. It con
 
 The \textit{T-Less} dataset does not provide 3D object coordinates. This is the reason why we rendered them ourselves. The script is part of the network package. Segmentation masks were rendered as well. Because the 32-bit TIFF object coordinate ground-truth files used up too much disk space when in original size they were cropped to the relevant area by determining the smallest box around the segmentation pixels. Because a part of the dataset had to be cropped, the author of this worked deemed it best to crop all input to the respective segmentation masks. As a result, the network expects all input to be cropped. Or, to be precise, the size that the network is configured to expect as input has to be larger than the size of the segmentation images. There are no other alterations made to the data.
 
+\section{Metrics}
+
+To be able to measure the accuracy of the different architectures and training techniques, we provide a metric to capture different aspects of the predictions. The error rate usually indicates the accuracy of the network. But in certain circumstances it makes sense to evaluate the predictions in a different way. One scenario that can occur is that the network predicts very inaccurate object coordinates at the border of the object's pixels. Since RANSAC eliminates outliers, the pose might not be much worse than a pose recovered from a prediction without outliers. The metric we defined measures the euclidean distance of the predicted and ground-truth coordinates, the number of inliers (pixels whose euclidean distance is below a certain threshold), as well as the angle error of the rotation and the euclidean distance of the translation of the recovered pose. This means, that the metric captures two error values based on the actual prediction and two based on the recovered pose. The script that we provide automatically calculates the mean but also outputs the median at 25, 50 and 75\% of the sorted error values. We assumed that the median at 50\% offers a good description of the accuracy of the network and used it to compare architectures and training setups.
+
 \section{Training Experiments}
 
-This section describes the configuration of the different training experiments. The chronological order of the experiments is reflected here. First, we compare the SGD and Adam optimizer in \ref{subsection:optimizers}. Then we evaluate the different architectures against each other in \ref{subsection:architectures}. Finally, asses the two training strategies training from scratch and incremental training in \ref{subsection:training_strategies}. We conducted all experiments on the object model 01 of the T-Less dataset. The image dimension was set to 500 pixels (for width and height), which is larger than the largest area covering an object in any image.
-
-\subsection{Optimizers} \label{subsection:optimizers}
+This section describes the configuration of the different training experiments. The chronological order of the experiments is reflected here. First, we compare the SGD and Adam optimizer in \ref{subsection:optimizers}. Then we evaluate the different architectures against each other in \ref{subsection:architectures}. Finally, asses the two training strategies training from scratch and incremental training in \ref{subsection:experiments_online_learning}. We conducted all experiments on the object model $01$ of the T-Less dataset. The image dimension was set to 500 pixels (for width and height), which is larger than the largest area covering an object in any image. All experiments were run using the training data of the object model $01$. For some experiments, we used only a subset of the available images (see Sections \ref{subsection:experiments_online_learning} and \ref{subsection:experiments_active_learning}) but we always split the data into 70\% training images and 30\% validation images. The axis labeled \textit{step} in loss graphs denotes the number of epochs. Each epoch consisted of 1000 iterations in every experiment.
 
 \begin{table}[]
 \centering
@@ -51,26 +54,201 @@ Run                                                     & 1     & 2      & 3    
 Epochs                                                  & 30    & 45     & 55      & 65       & 70        \\
 \begin{tabular}[c]{@{}l@{}}Learning\\ Rate\end{tabular} & 0.001 & 0.0001 & 0.00001 & 0.000001 & 0.0000001 \\  \hline
 \end{tabular}
-\caption{The configuration of the SGD optimizer used in the experiment to compared SGD and Adam.}\label{table:experiments_optimizers_sgd}
-\end{table}  
+\caption{The configuration of the SGD optimizer used in the experiment to compare SGD and Adam.}\label{table:experiments_optimizers_sgd}
+\end{table}
 
-To obtain the best optimizer for further experiments, we compared SGD and Adam using the first model we constructed. This architecture consists of 23 layers and has a receptive field-size of 99 per output pixel. $\beta_1$ and $\beta_2$ of the Adam optimizer were left at the default values set by Keras, which are $0.9$ and $0.999$, respectively. The more complex configuration of the SGD optimizer is given in Table \ref{table:experiments_optimizers_sgd}. Fig. \ref{todo} shows the loss of both experiments during training. Since Adam declines much faster than SGD, we chose Adam as the optimizer for all other experiments.
+\subsection{Optimizers} \label{subsection:optimizers}  
+
+\begin{figure}[!tbp]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+    			 xmin = 0,
+    			 xmax = 100,
+    			 ymin = 0,
+    			 ymax = 3,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_sgd/train_loss.csv};
+      			\addlegendentry{Adam}
+				\addlegendentry{SGD}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Training losses.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+    			 xmin = 0,
+    			 xmax = 100,
+    			 ymin = 0,
+    			 ymax = 3,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_sgd/val_loss.csv};
+      			\addlegendentry{Adam}
+				\addlegendentry{SGD}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Validation losses.}
+	\end{subfigure}
+	\caption{Training and validation losses of Adam and SGD used to train architecture 1. The plot is cropped on the $y$-axis to enhance the differences.}
+	\label{fig:experiments_adam_sgd_loss}
+\end{figure} 
+
+To obtain the best optimizer for further experiments, we compared SGD and Adam using the first architecture we constructed. This architecture consists of 23 layers and has a receptive field-size of 99. The hyper-parameters $\beta_1$ and $\beta_2$ of the Adam optimizer were left at the default values set by Keras, which are $0.9$ and $0.999$, respectively. The more complex configuration of the SGD optimizer is given in Table \ref{table:experiments_optimizers_sgd}. Fig. \ref{fig:experiments_adam_sgd_loss} shows the loss of both experiments during training. The SGD optimizer profits from the reduction of the learning rate around step 30, visible as the small step in the training loss. This could imply that further tuning of the training parameters of SGD could lead to better results than the displayed ones. But since the Adam optimizer does not need manual fine-tuning of its hyper-parameters and performs visibly better than SGD, we chose Adam as the optimizer for all following experiments. We based our conclusion that Adam is the superior optimizer for our network solely on the loss values. Since we trained the same network architecture twice and only varied the optimizers, better error rates mean better overall results.
 
 \subsection{Loss Functions}
 
-% L1 vs L2 loss
+\begin{table}[]
+\centering
+\begin{tabular}{|l||llll|}
+\hline 
+ Loss  & \begin{tabular}[c]{@{}l@{}}Object Coordinate\\ Error\end{tabular} & Inliers & Angle Error & Distance Error \\ \hline \hline \rowcolor{Gray}
+L1 & 0.3413                                                            & 1738    & 0.0281      & 4.5574         \\
+L2 & 0.8188                                                            & 1617    & 0.1090      & 8.3138 \\ \hline   
+\end{tabular}
+\caption{The metrics of the experiments comparing the loss functions.}
+\label{table:experiments_loss_functions}
+\end{table}
+
+%TODO maybe rewrite this "to prove our statment...." -> did we prove it???
+
+To prove our statement that the L1 loss is more suitable than the L2 loss for our application, we conducted another training run using the L2 loss and compared it to the run using the L1 loss of the previous experiment. The loss function comparisons are depicted in \ref{fig:experiments_l1_l2_loss} but are omitted here, due to their limited comparability. To obtain the L2 loss, we removed taking the square root in computing the loss which naturally results in higher error rates. Table \ref{experiments_loss_functions} shows the metrics of the experiments with the different loss functions. The L1 loss offers clearly superior accuracy and is used in all further experiments.
 
 \subsection{Architectures} \label{subsection:architectures}
 
 %TODO table of training parameters -> different batch sizes etc
 
-The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned above. The major difference between the experiments is the architecture itself. The training process were run for a different number of iterations because some architectures converged earlier than others. The different losses are displayed in fig. \ref{todo}.
+\begin{figure}[!tbp]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model3/exp1/train_loss.csv};
+      			\addplot[smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model6/exp1/train_loss.csv};
+      			\addlegendentry{Architecture 1}
+				\addlegendentry{Architecture 3}
+				\addlegendentry{Architecture 6}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Training losses.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model3/exp1/val_loss.csv};
+      			\addplot[smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model6/exp1/val_loss.csv};
+      			\addlegendentry{Architecture 1}
+				\addlegendentry{Architecture 3}
+				\addlegendentry{Architecture 6}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Validation losses.}
+	\end{subfigure}
+	\caption{Training and validation losses of the different architectures.}
+	\label{fig:experiments_architectures_loss}
+\end{figure} 
 
-\subsection{Online Learning} \label{subsection:training_strategies}
+The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned in Section \ref{subsection:optimizers} and the L1 loss. The major difference between the experiments is the architecture itself. The training process were run for a different number of iterations because some architectures converged earlier than others. The different losses are displayed in fig. \ref{fig:experiments_architectures_loss}.
+
+\subsection{Online Learning} \label{subsection:experiments_online_learning}
+
+%TODO  Check if number of images in plot is correct
+      			
+\begin{figure}[!tbp]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp2/train_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp3/train_loss.csv};
+      			\addplot[smooth,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp4/train_loss.csv};
+      			\addplot[smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5/train_loss.csv};
+      			\addplot[smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp6/train_loss.csv};
+      			\addlegendentry{All}
+      			\addlegendentry{500}
+				\addlegendentry{250}
+				\addlegendentry{100}
+				\addlegendentry{50}
+				\addlegendentry{25}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Training losses.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+			\begin{tikzpicture}
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={step},
+                 ylabel={value},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp2/val_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp3/val_loss.csv};
+      			\addplot[smooth,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp4/val_loss.csv};
+      			\addplot[smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5/val_loss.csv};
+      			\addplot[smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp6/val_loss.csv};
+      			\addlegendentry{All}
+      			\addlegendentry{500}
+				\addlegendentry{250}
+				\addlegendentry{100}
+				\addlegendentry{50}
+				\addlegendentry{25}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Validation losses.}
+	\end{subfigure}
+	\caption{Training and validation losses of the experiments of training architecture \textbf{1} from scratch but not with all images.}
+	\label{fig:experiments_online_sratch_loss}
+\end{figure} 
 
 % Nochmal zusammenfassen scratch vs inkrementell
 
-\subsection{Active Learning}
+\subsection{Active Learning} \label{subsection:experiments_active_learning}
 
 % Training on one side only -> provide metric results -> training on bad images -> new metrics
 
@@ -87,3 +265,7 @@ This section analyses the inference runtimes of the different architectures. Dee
 % This way of comparing training procedures is owned to the timeframe of this work -> maybe L2 works better for model 5, etc., we generalize from one model to all others
 
 % Create metric for images that the network produces bad predictions for, e.g. reprojection error for contradicting object coordinates, difference between segmentation mask rendered using the predicted pose and the ground-truth segmentation mask -> was not possible because we couldn't annotate images of the Endovis dataset
+
+% Maybe training - validation ratio should be more like 90 - 10
+
+% Difficult to say how the network would perform on the Endovis dataset -> we don't know if the networks with larger receptive field-size predict based on the letters

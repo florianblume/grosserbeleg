@@ -1,52 +1,22 @@
+\newcommand{\taskcontent}{%
+During laparoscopic surgery, a surgeon operates with special tools through the closed abdominal wall based on the view of an endoscopic camera. Although this type of surgery is beneficial for the patient, it is also very involved for the surgeon.  
 
-\begin{center}
-\includegraphics[width=.3\linewidth,valign=t]{TUD-blue}
-\hfill
-\includegraphics[width=.3\linewidth,valign=t]{cv_lab_banner}
-\end{center}
+Augmented reality could potentially help the surgeon by overlaying diagnostic information or navigation cues. One particular task that has to be solved to achieve this goal is the real-time 6D pose tracking (3D rotation + 3D translation) of all surgical tools in the endoscopic live stream. 
 
-\vspace{10mm}
+In recent years, major breakthroughs in computer vision, including object pose estimation, were driven by techniques from machine learning. However, these methods require a large amount of training data which is not readily available in the medical domain. The goal of this project is the development of an interactive tool for the annotation of laparoscopic surgery footage. 
 
-\line(1,0){450}
-\vspace{1mm}
-\textbf{Fakult\"at} Informatik - Institut KI - Professur Bildverarbeitung
+The user should be able to accurately annotate the 3D rotation and 3D translation of all surgical tools visible in a random surgery frame. The annotation results should be stored, the frame removed from the stack of unannotated data, and a new frame should be presented. Since a large amount of data has to be processed, the annotation process must be very effcient in design. 
 
-\vspace{1mm}
-\line(1,0){450}
+Based on previous frames already annotated, the system should propose an initialization of the 6D poses in the current frame. For this purpose the tool should include an online learning component, e.g. a CNN that learns to predict correspondences between the image and 3D models of the surgical tool.
+}
 
-\vspace{10mm}
-
-\noindent \Large \textbf{Aufgabenstellung f\"ur die Belegarbeit} \normalsize
-\\\\
-
-\noindent \textbf{Thema:} Annotation of Laparoscopic Surgery Images with Online Proposal Generation \\ \\
-\textbf{Name:} Florian Blume \\ \\
-\textbf{Studiengang:} Diplom Informatik \\ \\
-\textbf{Matrikel-Nr.:} 3924990 \\ \\
-\textbf{Beginn am:} 30.02.2018 \\ \\
-\textbf{Einzureichen am:} 30.08.2018 \\ \\
-\textbf{Betreuer:} Eric Brachmann \\ \\
-\textbf{Verantwortlicher Hochschullehrer:} 
-Dr. Dmitrij Schlesinger \\ \\
-
-\noindent During laparoscopic surgery, a surgeon operates with special tools through the closed abdominal wall based on the view of an endoscopic camera. Although this type of surgery is beneficial for the patient, it is also very involved for the surgeon. Augmented reality could potentially help the surgeon by overlaying diagnostic information or navigation cues. One particular task that has to be solved to achieve this goal is the real-time 6D pose tracking (3D rotation + 3D translation) of all surgical tools in the endoscopic live stream. In recent years, major breakthroughs in computer vision, including object pose estimation, were driven by techniques from machine learning. However, these methods require a large amount of training data which is not readily available in the medical domain. The goal of this project is the development of an interactive tool for the annotation of laparoscopic surgery footage. The user should be able to accurately annotate the 3D rotation and 3D translation of all surgical tools visible in a random surgery frame. The annotation results should be stored, the frame removed from the stack of unannotated data, and a new frame should be presented. Since a large amount of data has to be processed, the annotation process must be very effcient in design. Based on previous frames already annotated, the system should propose an initialization of the 6D poses in the current frame. For this purpose the tool should include an online learning component, e.g. a CNN that learns to predict correspondences between the image and 3D models of the surgical tool. \\
-
-\textbf{Tasks:}
-
-\begin{itemize}
+\taskform[pagestyle=empty]{\taskcontent}{%
 \item Survey related literature regarding data annotation and online learning.
 \item Create interaction concepts to enable a user to annotate the 6D pose of surgical tools very efciently. The images are already annotated with segmentation masks and tool IDs. 3D models of the tools are also given.
 \item Implement an annotation tool based on the interaction concept.
 \end{itemize}
-
 \textbf{Optional:}
-
 \begin{itemize}
 \item Implement a component which can propose 6D poses of surgical tools as an initialization for the user. The user should be able to dismiss or refine the proposal.
 \item The component should be trained based on data already annotated (in a previous session or another user) and be further refined through online learning during the annotation process.
-\end{itemize}
-
-\vspace{10mm}
-
-\par\noindent\makebox[2.5in]{\hrulefill} \hfill\makebox[2.5in]{\hrulefill}%
-\par\noindent\makebox[2.5in][l]{Unterschrift des Studenten}      \hfill\makebox[2.5in][l]{Unterschrift des Hochschullehrers}%
+}

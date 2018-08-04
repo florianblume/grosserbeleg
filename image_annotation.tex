@@ -3,7 +3,7 @@
 \begin{figure}[!tbp]
 	\centering
     \includegraphics[width=0.8\linewidth]{6dpat}
-    \caption{The logo of the pose annotation tool 6D-PAT.}
+    \caption{The logo of the pose annotation tool \ac{6dpat}.}
     	\label{fig:6dpat_logo}
 \end{figure} 
 
@@ -50,7 +50,7 @@ The goal of this work is to provide a system to successfully and efficiently ann
 
 \section{6D Pose Annotation Tool (6D-PAT)}
 
-The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (UIs). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the Endoscopic Vision Challenge in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and named \textit{6D - Pose Annotation Tool (6D-PAT)}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. We developed the program on the \textit{Linux}-based operating system \textit{Ubuntu} but it is compatible to other operating systems, as well.
+The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (\acp{ui}). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the Endoscopic Vision Challenge in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and named \textit{\acf{6dpat}}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. We developed the program on the \textit{Linux}-based operating system \textit{Ubuntu} but it is compatible to other operating systems, as well.
 
 \subsection{Requirements}
 
@@ -79,7 +79,7 @@ All necessary dependencies of the tool are listed below. The user needs to compi
     	\caption{The Signals and Slots mechanism of Qt. A class can define signals which can be emitted. Slots are functions that can be connected to signals. When a signal is emitted, all connected slots will be called. Image from \cite{qt_signals_and_slots}.}
     	\label{fig:qt_signals_slots}
 	\end{subfigure}
-	\caption{Two basic architectural concepts used in 6D-PAT: the model view controller pattern and the signal and slots pattern.}
+	\caption{Two basic architectural concepts used in \ac{6dpat}: the model view controller pattern and the signal and slots pattern.}
 \end{figure} 
 
 \noindent\textbf{OpenGL.} \textit{OpenGL} \cite{opengl} is a widespread open-source 3D graphics library specification. Implementations of the specification exist for many different operating systems, which makes applications using OpenGL portable. \\
@@ -90,24 +90,24 @@ All necessary dependencies of the tool are listed below. The user needs to compi
 
 \subsection{Architecture \& Code Design}
 
-6D-PAT is primarily a UI program, i.e. its purpose is to display a window and enable optical interaction for the user, like clicking. Thus, we chose the \textit{Model-View-Controller (MVC)} pattern as the underlying architecture. MVC separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the MVC architecture is shown in \fig \ref{fig:mvc}. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical tool that allows placement of UI components and linking of signals and slots without directly writing code and is part of the standard Qt framework.
+\ac{6dpat} is primarily a \ac{ui} program, i.e. its purpose is to display a window and enable optical interaction for the user, like clicking. Thus, we chose the \textit{\ac{mvc}} pattern as the underlying architecture. \ac{mvc} separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \ac{mvc} architecture is shown in \fig \ref{fig:mvc}. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical tool that allows placement of \ac{ui} components and linking of signals and slots without directly writing code and is part of the standard Qt framework.
 
 \begin{figure}[!tbp]
        \centering
    \includegraphics[width=\linewidth]{6dpat_class_diagram}
-    \caption{An abstract high-level class diagram of a subset of the classes of 6D-PAT. The large rectangles show the affiliation of a contained class in the MVC pattern. Arrows between those rectangles imply which class can use which target class, although not all classes of the source rectangle necessarily use all classes of the target rectangle. Small filled-out arrows imply a use relationship, while the not filled-out arrow heads indicate inheritance.}
+    \caption{An abstract high-level class diagram of a subset of the classes of \ac{6dpat}. The large rectangles show the affiliation of a contained class in the \ac{mvc} pattern. Arrows between those rectangles imply which class can use which target class, although not all classes of the source rectangle necessarily use all classes of the target rectangle. Small filled-out arrows imply a use relationship, while the not filled-out arrow heads indicate inheritance.}
    \label{fig:6dpat_class_diagram}
 \end{figure}
 
-The most important classes of the program are displayed in \fig \ref{fig:6dpat_class_diagram}. The diagram is simplified for easier understanding. The large rectangles group the classes by their affiliation in the MVC pattern. The bold arrows between the groups denote which classes can use or know which other classes. This does not necessarily mean, that all classes of the source rectangle use all classes of the target rectangle. 
+The most important classes of the program are displayed in \fig \ref{fig:6dpat_class_diagram}. The diagram is simplified for easier understanding. The large rectangles group the classes by their affiliation in the \ac{mvc} pattern. The bold arrows between the groups denote which classes can use or know which other classes. This does not necessarily mean, that all classes of the source rectangle use all classes of the target rectangle. 
 
 \subsubsection{Controller Classes}
 
-The controller classes consist mostly of the \textit{Main Controller}, which owns the \textit{Pose Recoverer} and the \textit{Neural Network Manager}. The code of these classes has not been incorporated into the main controller to further separate the classes by concern and facilitate future modifications. The pose recoverer handles the clicked 2D-3D correspondences and offers functionality to compute the pose. The neural network manager handles all tasks of the network. To keep the UI responsive during time-consuming network operations, the network manager uses the \textit{Neural Network Runnable} to run tasks in a separate thread. This design allows easy substitution of how to the network is currently run, if necessary. The main controller also creates the \textit{Model Manager} and the \textit{Load And Store Strategy}. To use different implementations of either class, the controller has to be adjusted create those instead. The \textit{Main Window} receives the created model manager from the main controller
+The controller classes consist mostly of the \textit{Main Controller}, which owns the \textit{Pose Recoverer} and the \textit{Neural Network Manager}. The code of these classes has not been incorporated into the main controller to further separate the classes by concern and facilitate future modifications. The pose recoverer handles the clicked 2D-3D correspondences and offers functionality to compute the pose. The neural network manager handles all tasks of the network. To keep the \ac{ui} responsive during time-consuming network operations, the network manager uses the \textit{Neural Network Runnable} to run tasks in a separate thread. This design allows easy substitution of how to the network is currently run, if necessary. The main controller also creates the \textit{Model Manager} and the \textit{Load And Store Strategy}. To use different implementations of either class, the controller has to be adjusted create those instead. The \textit{Main Window} receives the created model manager from the main controller
 
 \subsubsection{View Classes}
 
-The main controller creates the main window, which holds all views of the UI. It is the central view counterpart for the main controller and delegates all alterations requested by the controller to the other views. All signal and slots that are necessary between view classes get connected by the main window. Most of the signals and slots communication takes place between the \textit{Pose Viewer}, the \textit{Pose Editor} and the galleries. Whenever the user clicks an image or an object model in the gallery, the gallery notifies the viewer and editor to display the respective entity. The view classes know the model classes, especially the \textit{Model Manager}, by reference. For this end, the main window passes the model manager reference it received from the main controller to the other view classes.
+The main controller creates the main window, which holds all views of the \ac{ui}. It is the central view counterpart for the main controller and delegates all alterations requested by the controller to the other views. All signal and slots that are necessary between view classes get connected by the main window. Most of the signals and slots communication takes place between the \textit{Pose Viewer}, the \textit{Pose Editor} and the galleries. Whenever the user clicks an image or an object model in the gallery, the gallery notifies the viewer and editor to display the respective entity. The view classes know the model classes, especially the \textit{Model Manager}, by reference. For this end, the main window passes the model manager reference it received from the main controller to the other view classes.
 
 \subsubsection{Model Classes}
 
@@ -119,7 +119,7 @@ Some classes are not displayed in \fig \ref{fig:6dpat_class_diagram}. We created
 
 \subsection{Manual Annotation} 
 
-This section describes the user interface of 6D-PAT and the steps required to annotate images with 6D poses. 
+This section describes the user interface of \ac{6dpat} and the steps required to annotate images with 6D poses. 
 
 \subsubsection{Preparation}
 
@@ -128,14 +128,14 @@ This section describes the user interface of 6D-PAT and the steps required to an
 	\begin{subfigure}[t]{\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_components}
-    	\caption{The user interface of the annotation tool 6D-PAT. The displayed images and object models are from the T-Less dataset. The following components are marked with a turquoise box: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The \textit{Images Gallery} showing the images loaded from the selected path. \textbf{C}: The \textit{Pose Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D starting point of a correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The \textit{Objects Gallery} of rendered 3D previews of the object models loaded from the selected path. \textbf{F}: The \textit{Pose Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. The controls at the bottom can be used to edit existing poses.}
+    	\caption{The user interface of the annotation tool \ac{6dpat}. The displayed images and object models are from the T-Less dataset. The following components are marked with a turquoise box: \textbf{A}: The full path of the currently selected folder to load images from. \textbf{B}: The \textit{Images Gallery} showing the images loaded from the selected path. \textbf{C}: The \textit{Pose Viewer} shows the image selected in gallery B. The user can click on the image to define the 2D starting point of a correspondence. \textbf{D}: The full path of the currently selected folder to load object models from. \textbf{E}: The \textit{Objects Gallery} of rendered 3D previews of the object models loaded from the selected path. \textbf{F}: The \textit{Pose Editor} shows the object model selected in gallery E. The user can click on the object model to complete the correspondence with the 3D point. The controls at the bottom can be used to edit existing poses.}
     	\label{fig:6dpat_components}
 	\end{subfigure}
 	\par\bigskip
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_settings}
-    	\caption{The settings dialog of 6D-PAT. The dialog allows editing of the paths where the program loads images, object models and poses from.}
+    	\caption{The settings dialog of \ac{6dpat}. The dialog allows editing of the paths where the program loads images, object models and poses from.}
     	\label{fig:6dpat_settings}
 	\end{subfigure}
 	\hfill
@@ -145,7 +145,7 @@ This section describes the user interface of 6D-PAT and the steps required to an
     	\caption{The tab of the settings dialog that can be used to assign colors to the object models.}
     	\label{fig:6dpat_settings_codes}
 	\end{subfigure}
-	\caption{The UI of 6D-PAT.}
+	\caption{The \ac{ui} of \ac{6dpat}.}
 	\label{fig:6dpat_ui_overview}
 \end{figure}
 
@@ -167,7 +167,7 @@ If required, the user can assign colors to the object models using the settings 
 01           &  2:30 min & 1:23 min & 2:05 min & 3:06 min & 0:50 min \\ 
         15 & 2:16 min & 1:51 min & 1:35 min & 2:20 min & 3:07 min \\ \hline
 \end{tabular}
-	\caption{The table shows the time the author needed to recover a single pose in an image using 6D-PAT. Images were taken from test scene 7 of the T-Less dataset. The measurements shall give an impression of the tool's efficiency, without making the claim to resemble an empirical study.} 
+	\caption{The table shows the time the author needed to recover a single pose in an image using \ac{6dpat}. Images were taken from test scene 7 of the T-Less dataset. The measurements shall give an impression of the tool's efficiency, without making the claim to resemble an empirical study.} 
 	\label{tabel:6dpat_example_times}
 \end{table}
 
@@ -175,7 +175,7 @@ The component corresponding to the letters that we use in the following paragrap
 
 When the object is in an appropriate position, the user can begin to create a correspondence $C$ by clicking on $I$. This defines the 2D location $u$ of the correspondence. To complete the correspondence, the object model $O$ has to be clicked at the respective position $p$. This procedure has to be repeated until enough correspondences $C_1, \cdots, C_n$ have been defined to recover the new pose $P$. The minimum number of correspondences is $4$. 
 
-The creation process is shown in \fig \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the \textit{Create} button at the bottom of the pose viewer creates the pose $P$ using the correspondences $C_i$ and OpenCV's \textit{solvePnPRansac} method. The newly created pose can be refined using the controls of the pose viewer. After pose refinement, it is necessary to click the \textit{Save} button. 
+The creation process is shown in \fig \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the \textit{Create} button at the bottom of the pose viewer recovers the pose $P$ by solving the \ac{pnp} problem implied by the correspondences $C_i$ with OpenCV's \textit{solvePnPRansac} method. The newly created pose can be refined using the controls of the pose viewer. After pose refinement, it is necessary to click the \textit{Save} button. 
 
 The slider labeled \textit{Transparency} can be used to reduce the object's opacity on the image. After all poses have been annotated successfully, the next image can be selected from the image gallery. This operation has to be repeated until the dataset is fully annotated, although intermediate states can already be used to train the network (see Chapter \ref{chapter:semi_automatic}).
 
@@ -213,7 +213,7 @@ While trying to annotate the images of the Endoscopic Vision Challenge dataset, 
 	\begin{subfigure}[t]{0.47\textwidth}
 		\centering
     	\includegraphics[width=\linewidth]{6dpat_sfb_image}
-    	\caption{An image from the medical images dataset annotated using 6D-PAT. The correct rotation and translation are difficult to estimate without the correct 3D models.}
+    	\caption{An image from the medical images dataset annotated using \ac{6dpat}. The correct rotation and translation are difficult to estimate without the correct 3D models.}
     	\label{fig:6dpat_sfb_image}
 	\end{subfigure} 
 	\hfill

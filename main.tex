@@ -1,4 +1,5 @@
 \documentclass[color]{tudscrreprt}
+\usepackage{tudscrsupervisor}
 \usepackage[toc,page]{appendix}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -15,13 +16,24 @@
 \usepackage{pgfplots}
 \usepackage{pdfpages}
 \usepackage{diagbox}
+\usepackage{acro}
+\usepackage[autooneside=false,headsepline,footsepline]{scrlayer-scrpage}
 \usepackage{url}
 \graphicspath{ {images/} }
 
-\include{commands}
+\ihead{\leftmark}
+\chead{}
+\ohead{\rightmark}
+\automark[section]{chapter}
+\cfoot{}
+\lefoot{\pagemark}
+\rofoot{\pagemark}
 
 \let\linksbuendig=\raggedright
 \let\raggedright=\relax
+
+\include{commands}
+\include{acronyms}
 
 \begin{document}
 
@@ -37,8 +49,14 @@ Generation
 \thesis{Gro\ss er Beleg}
 \dateofbirth{12.08.1991}
 \placeofbirth{Karlsruhe}
+\matriculationyear{2012}
+\issuedate{30.02.2018}
+\duedate{30.08.2018}
 \defensedate{Not yet}
-\referee{Eric Brachmann}
+\referee{Dr. Eric Brachmann}
+\chairman{Dr. Eric Brachmann}
+\supervisor{Dr. Dmitrij Schlesinger}
+\professor{Dr. Dmitrij Schlesinger}
 \maketitle
 
 \include{task}
@@ -58,6 +76,8 @@ Here is an abstract.
 \include{experiments}
 \include{conclusions}
 \include{appendix}
+
+\printacronyms
  
 \listoffigures
  
@@ -65,5 +85,7 @@ Here is an abstract.
 
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography.bib}
+
+\include{statement_of_authorship}
 
 \end{document}
