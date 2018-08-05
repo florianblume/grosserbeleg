@@ -164,27 +164,49 @@ If required, the user can assign colors to the object models using the settings 
     \begin{tabular}{|c||ccccc|} \hline
 \diagbox{\# Object}{Image} & 0000.jpg & 0150.jpg & 0250.jpg & 0350.jpg & 0500.jpg \\ \hline\hline
 \rowcolor{Gray}
-01           &  2:30 min & 1:23 min & 2:05 min & 3:06 min & 0:50 min \\ 
-        15 & 2:16 min & 1:51 min & 1:35 min & 2:20 min & 3:07 min \\ \hline
+01           &  \textbf{2:09} (0:47) & \textbf{4:17} (1:05) & \textbf{1:31} (0:52) & \textbf{1:24} (0:55) & \textbf{1:15} (0:52) \\ 
+        15 & \textbf{2:31} (0:56) & \textbf{2:11} (1:15) & \textbf{2:27} (0:44) & \textbf{1:30} (0:52) & \textbf{2:23} (1:06) \\ \hline
 \end{tabular}
-	\caption{The table shows the time the author needed to recover a single pose in an image using \ac{6dpat}. Images were taken from test scene 7 of the T-Less dataset. The measurements shall give an impression of the tool's efficiency, without making the claim to resemble an empirical study.} 
+	\caption{The table shows the time in minutes the author needed to recover a single pose in an image using \ac{6dpat}. The bold numbers are the overall time needed to recover the pose, the numbers in parenthesis are the times needed to click the correspondences. Images were taken from test scene 7 of the T-Less dataset. The measurements shall give an impression of the tool's efficiency, without making the claim to resemble an empirical study.} 
 	\label{tabel:6dpat_example_times}
 \end{table}
+
+\begin{figure}[!tbp]
+	\centering
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=0.8\linewidth]{6dpat_exp_0150}
+    	\caption{Image 0150.jpg shows a nearly top-down view.}
+    	\label{fig:6dpat_exp_0150}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+	\centering
+    	\includegraphics[width=0.8\linewidth]{6dpat_exp_0350}
+    	\caption{Image 0350.jpg shows mix of a top-down and sideways view.}
+    	\label{fig:6dpat_exp_0500}
+	\end{subfigure}
+	\caption{Two example frames from test scene 7 of the T-Less dataset annotated using \ac{6dpat}. The green bounding box was derived from the ground-truth pose of the dataset, the red box from our recovered pose.}
+	\label{fig:6dpat_exps}
+\end{figure} 
 
 The component corresponding to the letters that we use in the following paragraph can be taken from \fig \ref{fig:6dpat_components}. To annotate a new pose, the user has to select an image $I$ from the images gallery (see \textit{B} in \fig \ref{fig:6dpat_components}) first. The pose viewer (see \textit{C} in \fig \ref{fig:6dpat_components}) then displays the image. Gallery \textit{E} is used to select the object model $O$ that the image is to be annoated with. The pose editor (see \textit{F} in \fig \ref{fig:6dpat_components}) shows the selected object model. The user can rotate the object to view otherwise hidden areas. Using the arrow keys, the user can move the object along the $x$ and $y$ axis and also, if the shift key is pressed, along the $z$ axis. 
 
 When the object is in an appropriate position, the user can begin to create a correspondence $C$ by clicking on $I$. This defines the 2D location $u$ of the correspondence. To complete the correspondence, the object model $O$ has to be clicked at the respective position $p$. This procedure has to be repeated until enough correspondences $C_1, \cdots, C_n$ have been defined to recover the new pose $P$. The minimum number of correspondences is $4$. 
 
-The creation process is shown in \fig \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the \textit{Create} button at the bottom of the pose viewer recovers the pose $P$ by solving the \ac{pnp} problem implied by the correspondences $C_i$ with OpenCV's \textit{solvePnPRansac} method. The newly created pose can be refined using the controls of the pose viewer. After pose refinement, it is necessary to click the \textit{Save} button. 
+The creation process is shown in \fig \ref{fig:6dpat_correspondence_creation}. More correspondences can make the initial pose more accurate. Clicking the \textit{Create} button at the bottom of the pose viewer recovers the pose $P$ by solving the \ac{pnp} problem implied by the correspondences $C_i$ with OpenCV's \textit{solvePnPRansac} method. The newly created pose can be refined using the controls of the pose viewer. After pose refinement, it is necessary to click the \textit{Save} button.
+
+We gave this way of recovering poses preference over other possible techniques for multiple reasons. Another intuitive way of recovering poses is dragging the object model from the pose editor onto the pose viewer at the approximately correct position. We assumed that the chosen procedure is faster, because when enough precise correspondences are clicked, rotation and position are accurate immediately. 
 
 The slider labeled \textit{Transparency} can be used to reduce the object's opacity on the image. After all poses have been annotated successfully, the next image can be selected from the image gallery. This operation has to be repeated until the dataset is fully annotated, although intermediate states can already be used to train the network (see Chapter \ref{chapter:semi_automatic}).
 
 It is possible to use the neural network to predict poses. This requires proper setup and training of the network beforehand. The user can then start the prediction process by clicking the \textit{Predict} button in the lower right corner of the pose editor.
 
-%TODO rewrite and provide example images
-Example times of the manual annotation process (without aid of the network) are given in Table \ref{tabel:6dpat_example_times}. The measured times were achieved by the author of this work trying to recover a single pose of the specified object model. The discrepancy between the measurements depends on the computed initial pose. A view that shows the object along multiples axes works best because defining correspondences along those axes fixes the rotation.
+Example times of the manual annotation process (without aid of the network) are given in Table \ref{tabel:6dpat_example_times}. The measured times were achieved by the author of this work trying to recover a single pose of the specified object model. We accepted a pose as correct, when the visual result was subjectively satisfactory. The table shows that the time needed for clicking correspondences does not linearly scale with the overall length of the annotation process. Recovering the pose for object 01 in image 0250.jpg took less time than recovering the pose of object 15 in the same image, although clicking the correspondences took longer. 
 
-We gave this way of recovering poses preference over other possible techniques for multiple reasons. Another intuitive way of recovering poses is dragging the object model from the pose editor onto the pose viewer at the approximately correct position. We assumed that the chosen procedure is faster, because when enough precise corerspondences are clicked, rotation and position are accurate immediately.
+The quality of the initial pose is crucial for the efficiency, as an accurate initial pose needs less corrections. \fig \ref{fig:6dpat_exps} shows two of the example images used for annotation. The reason the times of recovering poses vary significantly is the angle of the camera to the object. The nearly top-down view in image 0150.jpg prevents clicking correspondences along the object's $z$-axis, which is the longest direction of the object. The mix of the top-down and sideways view in image 0350.jpg allows to click many correspondences along all axes which makes the initial pose more accurate. 
+
+The rotational discrepancy of the object on the left in the two images is a result of missing characteristics of the 3D model. This made it difficult to recover the pose properly but was neglected because the rotation is offset by a similar amount in all annotated images (see Appendix \ref{appendix:example_annotations}).
 
 \begin{figure}[!tbp]
 	\centering

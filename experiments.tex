@@ -29,21 +29,23 @@ The following section describes the setups of the experiments conducted with the
 	\label{fig:tless_examples}
 \end{figure}
 
-The initial intention to completely annotate the medical images provided at the beginning of the project turned out to be not feasible (see chapter \ref{chapter:manual_annotation}). Instead, we chose the T-Less dataset to conduct the experiments with. Its objects are mostly texture-less  and of rather small size making them similar to surgical tools. Next to many human pose estimation datasets, there exist some datasets of objects too, like \cite{next_view_dataset}, \cite{pracsys_dataset} and \cite{rigid_body_dataset}. But those resemble surgical tools less than the objects of the T-Less dataset.
+The initial intention to completely annotate the medical images provided at the beginning of the project turned out to be not feasible (see chapter \ref{chapter:manual_annotation}). Instead, we chose the T-Less dataset to conduct the experiments with. Its objects are mostly texture-less  and of rather small size making them similar to surgical tools. Next to many human pose estimation datasets, there exist some datasets of objects too, like \cite{next_view_dataset}, \cite{pracsys_dataset} and \cite{rigid_body_dataset}. But the objects of T-Less resemble surgical tools more than the objects of those datasets.
 
 The T-Less dataset was released in 2017 by Hoda\v{n} et al. \cite{tless}. It contains the object models of 30 industry-relevant real world objects. Two versions exist: one mesh of the object that was manually reconstructed using CAD software and one that was produced from RGB-D images. The objects were captured using a Primsense CARMINE 1.09, a Microsoft Kinect v2 and a Canon IXUS 950 IS. We used the photos of the Canon camera due to their quality and we do not need depth information, which is also provided by the CARMINE sensor and the Kinect. There are 1296 images of each object in the training set of the dataset, sampled in 10 degree steps in elevation and 5 degree azimuth. 20 test scenes, consisting of 504 images each, exist as well. Those are photographs of cluttered scenes of different complexity, with sometimes more than 15 objects visible. All training and test images are annotated with the ground-truth poses of the visible objects. The authors also provided a tool set to render the objects at a given pose, etc. Fig. \ref{fig:tless_example_train} shows an example frame from the training set and fig. \ref{fig:tless_example_test} an example frame from the test set. The training images of the other objects look similar to the one shown. The dataset provides depth images, as well, but this is irrelevant to our setting.
 
 \section{Data Preparation}
 
-The \textit{T-Less} dataset does not provide 3D object coordinates. This is the reason why we rendered them ourselves. The script is part of the network package. Segmentation masks were rendered as well. Because the 32-bit TIFF object coordinate ground-truth files used up too much disk space when in original size they were cropped to the relevant area by determining the smallest box around the segmentation pixels. Because a part of the dataset had to be cropped, the author of this worked deemed it best to crop all input to the respective segmentation masks. As a result, the network expects all input to be cropped. Or, to be precise, the size that the network is configured to expect as input has to be larger than the size of the segmentation images. There are no other alterations made to the data.
+The \textit{T-Less} dataset does neither provide 3D object coordinates nor segmentation masks. This is the reason why we rendered both ourselves. The script is part of the network package. Because the 16-bit TIFF object coordinate ground-truth files used up too much disk space when in original size they were cropped to the relevant area by determining the smallest box around the segmentation pixels. The images and segmentation masks were cropped to the same area and the camera matrices adjusted accordingly. We used 16-bit TIFF files instead of 32-bit because we deemed the accuracy of 16-bit enough.
 
-\section{Metrics}
+\section{Metric}
+
+%TODO clarify using formulas
 
 To be able to measure the accuracy of the different architectures and training techniques, we provide a metric to capture different aspects of the predictions. The error rate usually indicates the accuracy of the network. But in certain circumstances it makes sense to evaluate the predictions in a different way. One scenario that can occur is that the network predicts very inaccurate object coordinates at the border of the object's pixels. Since RANSAC eliminates outliers, the pose might not be much worse than a pose recovered from a prediction without outliers. The metric we defined measures the euclidean distance of the predicted and ground-truth coordinates, the number of inliers (pixels whose euclidean distance is below a certain threshold), as well as the angle error of the rotation and the euclidean distance of the translation of the recovered pose. This means, that the metric captures two error values based on the actual prediction and two based on the recovered pose. The script that we provide automatically calculates the mean but also outputs the median at 25, 50 and 75\% of the sorted error values. We assumed that the median at 50\% offers a good description of the accuracy of the network and used it to compare architectures and training setups.
 
 \section{Training Experiments}
 
-This section describes the configuration of the different training experiments. The chronological order of the experiments is reflected here. First, we compare the SGD and Adam optimizer in \ref{subsection:optimizers}. Then we evaluate the different architectures against each other in \ref{subsection:architectures}. Finally, asses the two training strategies training from scratch and incremental training in \ref{subsection:experiments_online_learning}. We conducted all experiments on the object model $01$ of the T-Less dataset. The image dimension was set to 500 pixels (for width and height), which is larger than the largest area covering an object in any image. All experiments were run using the training data of the object model $01$. For some experiments, we used only a subset of the available images (see Sections \ref{subsection:experiments_online_learning} and \ref{subsection:experiments_active_learning}) but we always split the data into 70\% training images and 30\% validation images. The axis labeled \textit{step} in loss graphs denotes the number of epochs. Each epoch consisted of 1000 iterations in every experiment.
+This section describes the configuration of the different training experiments. The chronological order of the experiments is reflected here. First, we compare the SGD and Adam optimizer in \ref{subsection:optimizers}. Then we evaluate the different architectures against each other in \ref{subsection:architectures}. Finally, asses the two training strategies training from scratch and incremental training in \ref{subsection:experiments_online_learning}. We conducted all experiments on the object model $01$ of the T-Less dataset. The image dimension was set to 500 pixels (for width and height), which is larger than the largest area covering an object in any image. All experiments were run using the training data of the object model $01$. For some experiments, we used only a subset of the available images (see Sections \ref{subsection:experiments_online_learning} and \ref{subsection:experiments_active_learning}) but we always split the data into 70\% training images and 30\% validation images. The axis labeled \textit{epochs} in loss graphs denotes the number of epochs the training was run for. Each epoch consisted of 1000 iterations in every experiment.
 
 \begin{table}[]
 \centering
@@ -71,8 +73,8 @@ Epochs                                                  & 30    & 45     & 55   
     			 xmax = 100,
     			 ymin = 0,
     			 ymax = 3,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
@@ -94,8 +96,8 @@ Epochs                                                  & 30    & 45     & 55   
     			 xmax = 100,
     			 ymin = 0,
     			 ymax = 3,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
@@ -142,8 +144,8 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
                  grid=both,
                  grid style={solid,gray!30!white},
                  axis lines=middle,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
@@ -163,8 +165,8 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
                  grid=both,
                  grid style={solid,gray!30!white},
                  axis lines=middle,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
@@ -195,8 +197,8 @@ The experiments run on the different architectures were all performed using the 
                  grid=both,
                  grid style={solid,gray!30!white},
                  axis lines=middle,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/train_loss.csv};
@@ -222,8 +224,8 @@ The experiments run on the different architectures were all performed using the 
                  grid=both,
                  grid style={solid,gray!30!white},
                  axis lines=middle,
-                 xlabel={step},
-                 ylabel={value},
+                 xlabel={epoch},
+                 ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp1_adam_l1/val_loss.csv};
@@ -242,7 +244,7 @@ The experiments run on the different architectures were all performed using the 
 			\end{tikzpicture}
 		\caption{Validation losses.}
 	\end{subfigure}
-	\caption{Training and validation losses of the experiments of training architecture \textbf{1} from scratch but not with all images.}
+	\caption{Training and validation losses of the experiments of training architecture \textbf{1} from scratch but not with all images. The keys are the number of images used in training.}
 	\label{fig:experiments_online_sratch_loss}
 \end{figure} 
 

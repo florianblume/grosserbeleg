@@ -152,7 +152,7 @@ f_x & s & c_x \\
 \end{bmatrix}
 \end{align}
 
-\noindent which projects the 3D point transformed into the camera coordinate system on the 2D image plane. The points $u$ and $p$ are both in homogeneous coordinates, i.e. $u = \begin{bmatrix} u \\ v \\ 1 \end{bmatrix}$ and $p = \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$. The skew factor $s$ is usually $0$. The principal point $(c_x, c_y)$ normally is the center of the image and $f_x$ and $f_y$ are the focal lengths in $x$ and $y$ direction, respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables, it cannot be solved directly.
+\noindent which projects the 3D point transformed into the camera coordinate system on the 2D image plane. The points $u$ and $p$ are both in homogeneous coordinates, i.e. $u = \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}$ and $p = \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$. $x$ and $y$ correspond to the column and row in the image respectively. The skew factor $s$ is usually $0$. The principal point $(c_x, c_y)$ normally is the center of the image and $f_x$ and $f_y$ are the focal lengths in $x$ and $y$ direction, respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables, it cannot be solved directly.
 
 \begin{figure}[!tbp]
 	\centering
