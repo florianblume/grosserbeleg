@@ -204,9 +204,9 @@ It is possible to use the neural network to predict poses. This requires proper 
 
 Example times of the manual annotation process (without aid of the network) are given in Table \ref{tabel:6dpat_example_times}. The measured times were achieved by the author of this work trying to recover a single pose of the specified object model. We accepted a pose as correct, when the visual result was subjectively satisfactory. The table shows that the time needed for clicking correspondences does not linearly scale with the overall length of the annotation process. Recovering the pose for object 01 in image 0250.jpg took less time than recovering the pose of object 15 in the same image, although clicking the correspondences took longer. 
 
-The quality of the initial pose is crucial for the efficiency, as an accurate initial pose needs less corrections. \fig \ref{fig:6dpat_exps} shows two of the example images used for annotation. The reason the times of recovering poses vary significantly is the angle of the camera to the object. The nearly top-down view in image 0150.jpg prevents clicking correspondences along the object's $z$-axis, which is the longest direction of the object. The mix of the top-down and sideways view in image 0350.jpg allows to click many correspondences along all axes which makes the initial pose more accurate. 
+The quality of the initial pose is crucial for the efficiency, as an accurate initial pose needs less corrections. \fig \ref{fig:6dpat_exps} shows two of the example images used for annotation. The reason the times of recovering poses vary significantly is the angle of the camera to the object. The nearly top-down view in image 0150.jpg prevents clicking correspondences along the object's $z$-axis, which is the largest dimension of the object. The mix of the top-down and sideways view in image 0350.jpg allows to click many correspondences along all axes which makes the initial pose more accurate. 
 
-The rotational discrepancy of the object on the left in the two images is a result of missing characteristics of the 3D model. This made it difficult to recover the pose properly but was neglected because the rotation is offset by a similar amount in all annotated images (see Appendix \ref{appendix:example_annotations}).
+The rotational discrepancy of the object on the left in the two images is a result of missing characteristics of the 3D model. This made it difficult to recover the pose properly. We neglected this error because the rotation is offset by a similar amount in all annotated images (see Appendix \ref{appendix:example_annotations}). The object model of the bolt visible on the right has a notch at the top which prevents this rotation error.
 
 \begin{figure}[!tbp]
 	\centering
@@ -248,6 +248,8 @@ While trying to annotate the images of the Endoscopic Vision Challenge dataset, 
 	\caption{Example annotations of images of the Endoscopic Vision Challenge dataset. The object model is taken from \cite{3d_scalpel_online}.}
 	\label{fig:6dpat_sfb}
 \end{figure} 
+
+The issue of the rotational offset that is visible in the example annotations in Appendix \ref{appendix:example_annotations} could also be an issue of other datasets. It might not be an issue if the offset is nearly the same in all images but could lead to contradicting object coordinates. There is no simple solution to this problem. Distinct characteristic of the object models reduce this effect significantly, like the letters on the surgical tools in the Endoscopic Vision Challenge dataset.
 
 A first try to use the official Python bindings did not work to our complete satisfaction. Including the bindings in the program required complex alterations to the program. Running Python scripts is also possible by starting a new process. Qt natively offers this functionality.
 
