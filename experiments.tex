@@ -139,6 +139,10 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
 
 %TODO table of training parameters -> different batch sizes etc
 
+%TODO keine Architektur 3, weil die einfach zu schlecht war -> keine gute Idee kleine receptive field size und flaches Netzwerk
+
+%TODO We deemed the final performance to be more important when comparing architectures -> we compare the trainings on all images
+
 \begin{figure}[!tbp]
 	\centering
 	\begin{subfigure}[t]{0.48\textwidth}
@@ -189,6 +193,8 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
 The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned in Section \ref{subsection:optimizers} and the L1 loss. The major difference between the experiments is the architecture itself. The training process were run for a different number of iterations because some architectures converged earlier than others. The different losses are displayed in fig. \ref{fig:experiments_architectures_loss}.
 
 \subsection{Online Learning} \label{subsection:experiments_online_learning}
+
+%TODO Careful selection of images is important
 
 %TODO  Check if number of images in plot is correct
 
