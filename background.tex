@@ -128,9 +128,16 @@ A network's weights and biases can be initialized to 0 or sampled randomly from 
 	\caption{Example 3D coordinate representations.}
 \end{figure} 
 
-\textit{6D pose estimation} is a central task in the computer vision community. The goal is to retrieve the translation and rotation of an object relative to the camera. 6D refers to the \textit{\ac{6dof}}, i.e. the 6 free parameters of the 3D translation and 3D rotation. The field of application ranges from medical imaging, robotics, augmented reality and many more.
+\textit{6D pose estimation} is a central task in the computer vision community. The goal is to retrieve the translation and rotation of an object relative to the camera, i.e. the 6D pose. 6D refers to the \textit{\ac{6dof}}, i.e. the 6 free parameters of the 3D translation and 3D rotation. A \textit{6D pose} $P$ is the tuple $(R, t)$, where $R$ is the $3\times 3$ rotation matrix and $t \in \mathbb{R}^3$ the translation vector which defines the position of the object. The field of application ranges from medical imaging, robotics, augmented reality and many more.
 
 There are different possible ways to estimate the pose with learning-based approaches. The 6 parameters can be predicted directly or an intermediate representation can be used for pose computation. Predicting the parameters offers no possibility to verify or improve the pose afterwards. A possible intermediate representation are object coordinates. This means that the 3D locations on the object are predicted for the 2D pixels in the input image. Each subset of object coordinates leads to a certain pose. The next section will introduce this concept of object coordinates in depth.
+
+\begin{figure}[!tbp]
+	\centering
+    \includegraphics[width=0.45\linewidth]{pnp}
+    \caption{The relationship between the camera, the 3D points and their projections on the screen defined by the rotation matrix $R$ and the translation vector $t$. Image from \cite{opencv_pnp}.}
+    	\label{fig:pnp}
+\end{figure} 
 
 \subsection{Object Coordinate Regression} \label{objectcoordinates}
 
@@ -153,13 +160,6 @@ f_x & s & c_x \\
 \end{align}
 
 \noindent which projects the 3D point transformed into the camera coordinate system on the 2D image plane. The points $u$ and $p$ are both in homogeneous coordinates, i.e. $u = \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}$ and $p = \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}$. $x$ and $y$ correspond to the column and row in the image respectively. The skew factor $s$ is usually $0$. The principal point $(c_x, c_y)$ normally is the center of the image and $f_x$ and $f_y$ are the focal lengths in $x$ and $y$ direction, respectively. The values for those variables can vary, for example when cropping the image. \fig \ref{fig:pnp} visualizes the relation of pixels and object coordinates. If equation \ref{eq:pose_projection} is overdetermined because there are more correspondences than variables, it cannot be solved directly.
-
-\begin{figure}[!tbp]
-	\centering
-    \includegraphics[width=0.45\linewidth]{pnp}
-    \caption{The relationship between the camera, the 3D points and their projections on the screen defined by the rotation matrix $R$ and the translation vector $t$. Image from \cite{opencv_pnp}.}
-    	\label{fig:pnp}
-\end{figure} 
 
 A method to solve the \ac{pnp} problem for many correspondences is to use the \textit{\ac{ransac} algorithm} \cite{ransac}. \ac{ransac} selects a model based on a subset of the dataset and evaluates it using an energy function. This way, the approximate best model is found iteratively. Algorithm \ref{algorithm:ransac} shows the outline of the \ac{ransac} algorithm for pose estimation. The energy function can be arbitrary but should capture the quality of the pose. For example, the number of inliers can be counted. An inlier is a 3D point whose reprojection error is within a certain threshold.
 

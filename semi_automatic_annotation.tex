@@ -124,7 +124,7 @@ The network consists of convolutional, batch normalization and pooling layers on
 
 \section{Modes of Operation} \label{section:modes_of_operation}
 
-The goal of the neural network is to make the annotation process presented in Chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training the neural network can be used to predict predict poses in previously unseen images. As the network will likely make errors, the poses can be corrected afterwards using \ac{6dpat}. The improved pose predictions can serve as input to further train the network. A characteristic of the Endoscopic Vision Challenge dataset is that it does not provide any poses. Training the network is thus not as straightforward compared to a fully annotated dataset. The following sections describe different approaches of training the network, which are evaluated in Chapter \ref{chapter:experiments}.
+The goal of the neural network is to make the annotation process presented in Chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training the neural network can be used to predict predict poses in previously unseen images. As the network will likely make errors, the poses can be corrected afterwards using \ac{6dpat}. The improved pose predictions can serve as input to further train the network. As the dataset of the Endoscopic Vision Challenge does not provide any pose annotations, the question arises of how to optimally train the network with a reduced set of images The following sections describe different strategies which are evaluated in Chapter \ref{chapter:experiments}.
 
 \begin{figure}[!tbp]
 	\centering
@@ -135,13 +135,13 @@ The goal of the neural network is to make the annotation process presented in Ch
 
 \subsection{Online Learning} \label{subsection:online_learning}
 
-During the annotation process, the user can train the network using the new data. One option is to fully retrain the network with all  annotated images. This procedure is called \textit{training from scratch}. Another option is to train the network incrementally, instead. \textit{Incremental training} means that the user trains the network using the annotations that were created after the last training run. In this approach, the weights of the network are not initialized to 0 or randomly. Instead, the weights of the last training run are loaded and trained further using the new data. Because the weights are already set meaningful values, this method is likely to converge faster. The next chapter experimentally compares those approaches.
+%TODO Rewrite this subsection after experiment 7_x with model 1 have been completed and compared to 7_x of model 5 -> if similar, add all training and validation images to the training and validation sets of the next incremental run for model 1
 
-%TODO describe the different variations that arise
+During the annotation process, the user can train the network using the new data. One option is to fully retrain the network with all  annotated images. This procedure is called \textit{training from scratch}. Another option is to train the network incrementally, instead. \textit{Incremental training} means that the user trains the network using the annotations that were created after the last training run. In this approach, the weights of the network are not initialized to 0 or randomly. Instead, the weights of the last training run are loaded and trained further using the new data. This method is likely to converge faster and generally needs less time as fewer examples are used during training compared to training from scratch. There is not only one way how to train the network incrementally. Images previously used for training could be part of the validation set in the next training run. 
 
 \subsection{Active Learning}
 
-To help the user decide which images annotate, a procedure can propose images for annotation. The proposals should be based on inaccurate predictions of the network. Correcting these predictions can help the network to improve its accuracy.
+An intuitive approach to optimally train the network with only a few images is to propose to the user to annotate images, which the network does not perform well on. To 
 
 %TODO check if the sentence "we provide a measure in the next chapter" is still correct in the end
 
