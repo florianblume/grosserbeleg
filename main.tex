@@ -17,15 +17,18 @@
 \usepackage{pgfplots}
 \usepackage{pdfpages}
 \usepackage{diagbox}
+\usepackage{bbm}
 \usepackage{setspace}
 \usepackage{acro}
 \usepackage[autooneside=false,headsepline,footsepline]{scrlayer-scrpage}
 \usepackage{url}
 \graphicspath{ {images/} }
 
-\ihead{\rightmark}
+\lehead{\leftmark}
+\lohead{\leftmark}
 \chead{}
-\ohead{\leftmark}
+\rehead{\rightmark}
+\rohead{\rightmark}
 \automark[section]{chapter}
 \cfoot{}
 \lefoot{\pagemark}
@@ -66,7 +69,7 @@ Generation
 \include{task}
 
 \begin{abstract}
-Here is an abstract.
+Here is an abstract. %TODO
 \end{abstract}
 
 
@@ -81,6 +84,8 @@ Here is an abstract.
 \include{conclusions}
 \include{appendix}
 
+\newpage
+\thispagestyle{plain}
 \printacronyms
  
 \listoffigures

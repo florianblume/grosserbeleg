@@ -29,7 +29,7 @@ To assist in the process of manual image annotation presented in Chapter \ref{ch
 
 \noindent\textbf{Error.} The term \textit{error} denotes the value computed using the loss function. It is essentially the discrepancy between the desired output and the output of the network. It is also called \textit{error rate} or \textit{loss} or, when the loss is computed only on the training data, \textit{training error} or \textit{validation error}, when computed on the validation set. \\
 
-\noindent\textbf{Performance.} The term \textit{performance} stands for the network's accuracy. \\
+\noindent\textbf{Performance.} The term \textit{performance} denotes the network's accuracy in this work. \\
 
 \noindent\textbf{Dropout Percentage.} \textit{Dropout percentage} is the percentage of neurons to deactivate in a layer during training. \\
 
@@ -135,14 +135,12 @@ The goal of the neural network is to make the annotation process presented in Ch
 
 \subsection{Online Learning} \label{subsection:online_learning}
 
-%TODO Rewrite this subsection after experiment 7_x with model 1 have been completed and compared to 7_x of model 5 -> if similar, add all training and validation images to the training and validation sets of the next incremental run for model 1
+During the annotation process, the user can train the network using the new data. Given that at the beginning likely no poses exist and the user first has to annotate a couple of images manually, we have to use the little available data as optimally as possible. One option is to fully retrain the network with all  annotated images. This procedure is called \textit{training from scratch}. It is also possible to train the network incrementally, instead. \textit{Incremental training} means that the user trains the network using the annotations that were created after the last training run. In this approach, the weights of the network are not initialized to 0 or randomly. Instead, the weights of the last training run are loaded and trained further using the new data. This method is likely to converge faster and generally needs less time to complete the training as compared to training from scratch. We compare the network performance of both approaches in the next chapter.
 
-During the annotation process, the user can train the network using the new data. One option is to fully retrain the network with all  annotated images. This procedure is called \textit{training from scratch}. Another option is to train the network incrementally, instead. \textit{Incremental training} means that the user trains the network using the annotations that were created after the last training run. In this approach, the weights of the network are not initialized to 0 or randomly. Instead, the weights of the last training run are loaded and trained further using the new data. This method is likely to converge faster and generally needs less time as fewer examples are used during training compared to training from scratch. There is not only one way how to train the network incrementally. Images previously used for training could be part of the validation set in the next training run. 
+\subsection{Active Learning} \label{subsection:active_learning}
 
-\subsection{Active Learning}
-
-An intuitive approach to optimally train the network with only a few images is to propose to the user to annotate images, which the network does not perform well on. To 
-
-%TODO check if the sentence "we provide a measure in the next chapter" is still correct in the end
-
-%TODO we used segmentation IoU for active learning
+An intuitive approach to optimally train the network with only a few images is to propose to the user to annotate images, which the network does not perform well on. This gives rise to the question how to obtain an indication of the network's accuracy without any ground-truth poses. As the Endoscopic Vision Challenge dataset provides segmentation masks, a simple but direct approach is the compute the intersection over union between the given segmentation mask and one rendered mask using the inferred poses. The intersection over union is defined in the following way
+\begin{align*}
+\text{IoU} = \frac{\sum\limits_{(i, j)} \mathbbm{1}[s_g(i, j) = q] \cdot  \mathbbm{1}[s_p(i, j) = q]}{\sum\limits_{(i, j)} \frac{\mathbbm{1}[s_g(i, j) = q] +  \mathbbm{1}[s_p(i, j) = q]}{2}}
+\end{align*}
+where $s_g$ and $s_p$ are the segmentation mappings of the ground-truth segmentation mask and the rendered segmentation mask, respectively (see Section \ref{section:terminology} for details on segmentation masks), and $q$ is the type of the object model. $\mathbbm{1}$ is a function that becomes 1, if the statement inside is true, 0 otherwise. This means that the formula sums up all pixels, that both segmentation masks assign the same type to and divides this sum the whole area covered by this type in both masks. Note that by dividing the whole area by 2, the $\text{IoU}$ becomes 1 when the masks match exactly. The training process can suggest images to the user that need correction of the recovered poses based on this measure. The next chapter explores this method experimentally.

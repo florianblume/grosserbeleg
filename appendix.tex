@@ -51,9 +51,8 @@
 %TODO table with parameters of the experiments
 
 \begin{figure}[!tbp]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-			\begin{tikzpicture}
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
   				\begin{axis}[cycle list name=tb, 
                  grid=both,
                  grid style={solid,gray!30!white},
@@ -74,9 +73,9 @@
 			\end{tikzpicture}
 		\caption{Training losses.}
 	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-			\begin{tikzpicture}
+	\hspace{15mm}
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
   				\begin{axis}[cycle list name=tb, 
                  grid=both,
                  grid style={solid,gray!30!white},
@@ -97,8 +96,129 @@
 			\end{tikzpicture}
 		\caption{Validation losses.}
 	\end{subfigure}
-	\caption{Training and validation losses of the L1 and L2 loss used to train architecture 1. The plot is cropped on the $y$-axis to enhance the differences.}
+	\caption{Training and validation losses of the L1 and L2 loss of training architecture 1. The plot is cropped on the $y$-axis to enhance the differences.}
 	\label{fig:experiments_l1_l2_loss}
+\end{figure} 
+
+
+\begin{figure}[!tbp]
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={epoch},
+                 xmax = 100,
+    			 ymax = 8,
+                 ylabel={loss},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[line width=2pt,dotted,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_25/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_50/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_100/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_250/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp3/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp4/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_7] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp5/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_8] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp6/train_loss.csv};
+				\addlegendentry{25 [inc 70/30]}
+				\addlegendentry{50 [inc 70/30]}
+				\addlegendentry{100 [inc 70/30]}
+				\addlegendentry{250 [inc 70/30]}
+				\addlegendentry{250}
+				\addlegendentry{100}
+				\addlegendentry{50}
+				\addlegendentry{25}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Training losses.}
+	\end{subfigure}
+	\hspace{15mm}
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={epoch},
+    			 xmax = 100,
+    			 ymax = 20,
+                 ylabel={loss},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[line width=2pt,dotted,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_25/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_50/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_100/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp7_250/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp3/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp4/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_7] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp5/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_8] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp6/val_loss.csv};
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Validation losses.}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={epoch},
+                 xmax = 50,
+    			 ymax = 8,
+                 ylabel={loss},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[line width=2pt,dotted,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_25/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_50/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_100/train_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_250/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp3/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp4/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_7] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp5/train_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_8] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp6/train_loss.csv};
+				\addlegendentry{25 [inc 90/10]}
+				\addlegendentry{50 [inc 90/10]}
+				\addlegendentry{100 [inc 90/10]}
+				\addlegendentry{250 [inc 90/10]}
+				\addlegendentry{250}
+				\addlegendentry{100}
+				\addlegendentry{50}
+				\addlegendentry{25}
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Training losses.}
+	\end{subfigure}
+	\hspace{15mm}
+	\begin{subfigure}[t]{0.4\textwidth}
+			\begin{tikzpicture}[scale=0.95]
+  				\begin{axis}[cycle list name=tb, 
+                 grid=both,
+                 grid style={solid,gray!30!white},
+                 axis lines=middle,
+                 xlabel={epoch},
+    			 xmax = 50,
+    			 ymax = 20,
+                 ylabel={loss},
+                 x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
+                 y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
+      			\addplot[line width=2pt,dotted,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_25/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_50/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_100/val_loss.csv};
+      			\addplot[line width=2pt,dotted,tb_color_4] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp8_250/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_5] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp3/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_6] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp4/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_7] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp5/val_loss.csv};
+      			\addplot[line width=1pt,smooth,tb_color_8] table [x=Step, y=Value, col sep=comma] {experiments/model5/exp6/val_loss.csv};
+    			\end{axis}
+			\end{tikzpicture}
+		\caption{Validation losses.}
+	\end{subfigure}
+	\caption{Training and validation losses of the experiments of training architecture \textbf{5}. The keys are the number of images used in training. \textit{inc} stands for incremental training and the numbers afterwards indicate the split of the training and validation dataset.}
+	\label{fig:experiments_online_sratch_loss_arch5}
 \end{figure} 
 
 \end{appendices}
