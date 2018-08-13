@@ -1,0 +1,15 @@
+\chapter{Future Works} \label{chapter:future_work}
+
+To provide an outlook how the manual annotation process can be improved in the future, we provide some suggestions here. An important feature that should be implemented in \ac{6dpat} is allowing to move the object models around on the displayed image by dragging and them using the mouse. The initial poses using the clicking procedure are already sufficiently accurate in many cases. But when the camera is looking along an axis of the object, the position can be far off. The user can correct these poses with the provided controls. But the implemented rotation feature indicates that editing a pose by mouse can be faster which probably also holds for the position of an object.
+
+The binding of the neural network to the program does not allow to load the weights of the net and persist this state in the memory of the computer. In case that the user wants to annotate a large dataset of just one object, they could profit from a feature allowing to keep the weights in memory instead of loading them each time the inference process is started. This way, predicting the pose for only one image could be achieved in significantly less time. Running the network to predict the pose of one object in a large amount of images amortizes the loading of the weights.
+
+Another suggested step is to fully incorporate the network in the annotation tool. This way, inexperienced users can profit from the network without the need for an expert to run the network inference. There is probably no way to automatize the setup process, as this requires knowledge neural networks. In an ideal setting, this interference can be reduced to a minimum and users are introduced to the most relevant parameters only, which they can set from within the program.
+
+Because the neural network is trained for one object only, the time-intensive step (proportional to the overall time needed for inference on one image) of loading the trained weights has to be performed before predicting poses for different objects. The frame of this work was to explore neural networks trained for one object only, it is therefore not known whether this overhead of loading the weights can be reduced.
+
+% maybe train network on test images and try on training images
+
+% dropout nicht weiter erforscht, koennte aber gut sein, dass das overfitten verhinderbar ist, dann koennte es auch gute ergebnisse liefern, vor allem fuer das inkrementelle training
+
+% batchnorm von trainiertem netz nehmen, batch norm auf nicht lernbar setzen und das dann fuer das inkrementelle training benutzen

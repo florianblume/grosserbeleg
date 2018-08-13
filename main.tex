@@ -1,4 +1,4 @@
-\documentclass[twoside,color]{tudscrreprt}
+\documentclass[color]{tudscrreprt}
 \usepackage{tudscrsupervisor}
 \usepackage[toc,page]{appendix}
 \usepackage{caption}
@@ -43,7 +43,6 @@
 \include{acronyms}
 
 \begin{document}
-
 \faculty{Factuly of Computer Science}
 \department{Department of Artificial Intelligence}
 \institute{Institute of Computer Vision}
@@ -65,36 +64,26 @@ Generation
 \supervisor{Dr. Dmitrij Schlesinger}
 \professor{Dr. Dmitrij Schlesinger}
 \maketitle
-
 \include{task}
-
 \begin{abstract}
 Here is an abstract. %TODO
 \end{abstract}
-
-
 \tableofcontents
-
 \include{introduction}
 \include{background}
 \include{relatedwork}
 \include{image_annotation}
 \include{semi_automatic_annotation}
 \include{experiments}
-\include{conclusions}
+\include{discussion}
+\include{futureworks}
 \include{appendix}
-
 \newpage
 \thispagestyle{plain}
 \printacronyms
- 
 \listoffigures
- 
 \listoftables
-
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography.bib}
-
 \include{statement_of_authorship}
-
 \end{document}

@@ -48,8 +48,6 @@
 
 \chapter{Experiments}
 
-%TODO table with parameters of the experiments
-
 \begin{figure}[!tbp]
 	\begin{subfigure}[t]{0.4\textwidth}
 			\begin{tikzpicture}[scale=0.95]
@@ -100,6 +98,47 @@
 	\label{fig:experiments_l1_l2_loss}
 \end{figure} 
 
+\begin{figure}[!tbp]
+	\centering
+	\vspace{5mm}
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model2/0045_bounding_boxes}
+    	\caption{Image 0045.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model2/0438_bounding_boxes}
+    	\caption{Image 0438.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\par\bigskip
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model3/0045_bounding_boxes}
+    	\caption{Image 0045.jpg, pose recovered using architecture 3.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model3/0438_bounding_boxes}
+    	\caption{Image 0438.jpg, pose recovered using architecture 3.}
+	\end{subfigure}
+	\par\bigskip
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model5/0045_bounding_boxes}
+    	\caption{Image 0045.jpg, pose recovered using architecture 5.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{experiments/model5/0438_bounding_boxes}
+    	\caption{Image 0438.jpg, pose recovered using architecture 5.}
+	\end{subfigure}
+	\caption{Example images from test scene 7 with rendered poses recovered by the architecture mentioned in the image caption.}
+	\label{fig:appendix_architecture_comparison_example_frames}
+\end{figure}
 
 \begin{figure}[!tbp]
 	\begin{subfigure}[t]{0.4\textwidth}
@@ -226,12 +265,12 @@
 \begin{tabular}{l||lllll}
 Method                   & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$ \\ \hline \hline
 from scratch (25, 70/30)        & 10.0625            & 12                   & 59.3067            & 42.3701           & 46.4940           \\ \hline
-from scratch (50, 70/30)        & 10.2812             & 19                  & 50.6026            & 12.0079           & 18.6204           \\ \hline 
-from scratch (100, 70/30)       & 6.6796             & 128                 & 12.8198             & 12.0912            & 14.1384           \\ \hline
-from scratch (250, 70/30)       & \textbf{3.8300}             & \textbf{332}                 & \textbf{2.967}             & \textbf{4.5739}            & \textbf{4.7051}            \\ \hline
+from scratch (50, 70/30)        & 10.2812             & 19                  & 50.6026            & 12.0079           & 18.6204           \\  \hline 
+from scratch (100, 70/30)       & 6.6796             & 128                 & 12.8198             & 12.0912            & 14.1384           \\ \hline 
+from scratch (250, 70/30)       & \textbf{3.8300}             & \textbf{332}                 & \textbf{2.967}             & \textbf{4.5739}            & \textbf{4.7051}            \\ \hline \hline
 incremental (50, 70/30)  & 9.2265            & 20                   & 54.5658           & 22.9633           & 28.7778           \\ \hline
-incremental (100, 70/30) & 9.9296            & 30                  & 59.2418           & 18.3960           & 27.4747           \\ \hline 
-incremental (250, 70/30) & 8.5078             & 61                  & 43.6734            & 12.6362          & 21.5421          \\ \hline
+incremental (100, 70/30) & 9.9296            & 30                  & 59.2418           & 18.3960           & 27.4747           \\ \hline
+incremental (250, 70/30) & 8.5078             & 61                  & 43.6734            & 12.6362          & 21.5421          \\ \hline \hline 
 incremental (50, 90/20)  & 8.5000            & 22                   & 43.9771           & 43.9889           & 44.9206          \\ \hline 
 incremental (100, 90/10) & 8.5859             & 39                 & 33.7409            & 33.9101          & 36.7867         \\ \hline
 incremental (250, 90/10) & 8.6171            & 45                 & 35.5996            & 29.3267            & 31.9470         

@@ -6,7 +6,7 @@ The following section describes the setups of the experiments conducted with the
 
 \noindent\textbf{Hyper-Parameter.} \textit{Hyper-parameters} are the tunable parameters of a network. The number and kind of parameters vary with the used type of network architecture, optimizer, etc.
 
-\section{Datasets}
+\section{Datasets} \label{section:experiments_datasets}
 
 \begin{figure}[!tbp]
 	\centering
@@ -30,10 +30,6 @@ The following section describes the setups of the experiments conducted with the
 The initial intention to completely annotate the medical images of the Endoscopic Vision Challenge dataset turned out to be not feasible (see Chapter \ref{chapter:manual_annotation}). Instead, we chose the T-Less dataset to conduct the experiments with. Its objects are mostly texture-less  and of rather small size, making them similar to surgical tools. Next to many human pose estimation datasets, there exist some datasets of objects, too, like \cite{next_view_dataset}, \cite{pracsys_dataset} and \cite{rigid_body_dataset}. But the objects of T-Less resemble surgical tools more than the objects of those datasets.
 
 The T-Less dataset was released in 2017 by Hoda\v{n} et al. \cite{tless}. It contains the object models of 30 industry-relevant real world objects. Two versions exist: one mesh of the object that was manually reconstructed using CAD software and one that was produced from RGB-D images. The 3D coordinates of the objects reflect their size in millimeters. For example, the minimum and maximum of any component of the coordinates of object model 01 are about -30 and 30. This means that the model is about 60 mm long. The objects were captured using a Primsense CARMINE 1.09, a Microsoft Kinect v2 and a Canon IXUS 950 IS. We used the photos of the Canon camera due to their quality and since we do not need depth information, which is also provided by the CARMINE sensor and the Kinect. There are 1296 images of each object in the training set of the dataset, sampled in 10 degree steps in elevation and 5 degree azimuth. 20 test scenes, consisting of 504 images each, exist as well. Those are photographs of cluttered scenes of different complexity, with sometimes more than 15 objects visible. All training and test images are annotated with the ground-truth poses of the visible objects. The authors also provide a tool set to render the objects at a given pose. \fig \ref{fig:tless_example_train} shows an example frame from the training set and \fig. \ref{fig:tless_example_test} an example frame from the test set. The training images of the other objects look similar to the depicted image. The dataset provides depth images, as well but this is irrelevant to our setting.
-
-%TODO comma as well?
-
-%TODO network predicts coordinates for all pixels belgongin to the segmentation mask -> special handling necessary but not implemented when multiple instances of the object are visible
 
 \section{Data Preparation}
 
@@ -169,6 +165,22 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
 
 \subsection{Architectures} \label{subsection:architectures}
 
+\begin{figure}[!b]
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=0.7\linewidth]{experiments/model1/0045_bounding_boxes}
+    	\caption{Image 0045.jpg with inferred poses.}
+	\end{subfigure} 
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=0.7\linewidth]{experiments/model1/0438_bounding_boxes}
+    	\caption{Image 0438.jpg with inferred poses.}
+	\end{subfigure} 
+	\caption{Example images from test scene 7 of the T-Less dataset with poses inferred by architecture 1 trained on all images.}
+	\label{fig:architecture_experiments_example_frames}
+\end{figure} 
+
 \begin{figure}[!bbp]
 	\begin{subfigure}[t]{0.4\textwidth}
 			\begin{tikzpicture}[scale=0.95]
@@ -225,13 +237,13 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
 	\label{fig:experiments_architectures_loss}
 \end{figure} 
 
-The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned in Section \ref{subsection:optimizers} and the L1 loss. The only difference is therefore the used architecture. The losses of the experiments are displayed in \fig \ref{fig:experiments_architectures_loss}. The largest gap of the losses is between architectures 4 and 6 and the four remaining architectures. This gap is especially large in the validation loss but also observable in the training loss. 
+The experiments run on the different architectures were all performed using the Adam optimizer with the parameters mentioned in Section \ref{subsection:optimizers} and the L1 loss. Therefore, the only difference is the used architecture. The losses of the experiments are displayed in \fig \ref{fig:experiments_architectures_loss} and two example images from test scene 7 of the T-Less dataset with rendered bounding boxes of the poses inferred by architecture 1 are shown in \fig \ref{fig:architecture_experiments_example_frames}. The largest gap of the losses is between architectures 4 and 6 and the four remaining architectures. This gap is especially large in the validation loss but also observable in the training loss. 
 
-Architectures 4 and 6 employ dropout, as opposed to architectures 1 - 3 and 5, which use batch normalization (with batch sizes of 14, 10, 14 and 3, respectively). The authors of \cite{batch_normalization}  propose that batch normalization reaches better optima than dropout, which could explain the training loss difference. The validation losses of the two dropout architectures actually increase, which is not visible in the graph. This indicates that the networks overfit to the data. The constantly increasing validation loss is the reason why we did not keep the training processes of architectures 4 and 6 running, despite their training errors still decreasing. Proper exploration of hyper-parameters, like frequency of the dropout layers, as well as the dropout frequency itself, could improve the performance of architectures 4 and 6. But since batch normalization achieves a good accuracy without further fine-tuning, this is left for future research.
+Architectures 4 and 6 employ dropout, as opposed to architectures 1 - 3 and 5, which use batch normalization (with batch sizes of 14, 10, 14 and 3, respectively). The authors of \cite{batch_normalization}  propose that batch normalization reaches better optima than dropout, which could explain the training loss difference. The validation losses of the two dropout architectures actually increase, which is not visible in the graph. This indicates that the networks overfit to the data. The constantly increasing validation loss is the reason why we did not keep the training processes of architectures 4 and 6 running, despite their training errors still decreasing. Proper exploration of hyper-parameters, like frequency of the dropout layers, as well as the dropout frequency itself, could improve the performance of architectures 4 and 6. But since batch normalization achieves a good accuracy without further fine-tuning, we did not investigate these architectures any further.
 
-Architectures 1 and 5 perform similarly well. The reduction of the receptive field-size, without increasing the network's depth leads to a higher training and validation error. This can be seen in the discrepancy between the loss curves of architecture 1 and 3, since architecture 3 is as deep as architecture 1 (both 23 layers) but with a reduced receptive field-size. Architecture 2 compensates the increased error related to the field-size by deeper design (35 layers). Architecture 5 achieves an error as low as architecture 1. Although its receptive field-size is smaller than that of architecture 2 (59 opposed to 67), we increased the number of layers to 50. More details about depths and other parameters of the networks are given in Table \ref{table:network_architectures} in Chapter \ref{chapter:semi_automatic}.
+The metrics of architectures 1 - 3 and 5 are provided in Table \ref{table:architecture_validation_metrics_comparison}. The example images of \fig \ref{fig:architecture_experiments_example_frames} with poses inferred by architectures 2, 3 and 5 are provided in Appendix \ref{fig:appendix_architecture_comparison_example_frames}. Architecture 1 performs best, followed by architecture 5. The table shows that multiple different metrics can give a deeper grasp of a network's performance, as architecture 1 has a significantly lower object coordinate error ($e_{\text{coord}}$) than architecture 5 but their pose errors ($e_{\text{pose}}$) are of similar quality. Architecture 2 offers a better object coordinate error than architecture 5 but achieves a worse pose error.
 
-The metrics of architectures 1 - 3 and 5 are provided in Table \ref{table:architecture_validation_metrics_comparison}. Architecture 1 performs best, followed by architecture 5. The table shows that multiple different metrics can give a deeper grasp of a network's performance, as architecture 1 has a significantly lower object coordinate error ($e_{\text{coord}}$) than architecture 5 but their pose errors ($e_{\text{pose}}$) are of similar quality. Architecture 2 offers a better object coordinate error than architecture 5 but achieves a worse pose error.
+The results of the training experiments of the different architectures lead us to choose architectures 1 and 5 for further experiments, i.e. a shallower architecture with larger receptive field-size and a deeper architecture with reduced receptive field-size. Table \ref{table:architecture_test_metrics_comparison} shows the evaluation metrics for the networks on test scene 7 of the T-Less dataset. Architectures 1 and 5 achieve the best accuracy which supports our decision to use them in the following experiments which investigate how these two different designs behave when trained with smaller datasets.
 
 \begin{table}[]
 \centering
@@ -259,19 +271,15 @@ Architecture & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $
 \label{table:architecture_test_metrics_comparison}
 \end{table}
 
-The results of the training experiments of the different architectures lead us to choose architectures 1 and 5 for further experiments, i.e. a shallower architecture with larger receptive field-size and a deeper architecture with reduced receptive field-size. Table \ref{table:architecture_test_metrics_comparison} shows the evaluation metrics for the networks on test scene 7 of the T-Less dataset. Architectures 1 and 5 still achieve the best accuracy. One reason why architecture 5 suddenly performs better than architecture 1 could be that the objects in the test scenes of the T-Less dataset often occlude each other. Due to architecture 1's larger receptive field-size it could be that the network predicts coordinates based on distinctive characteristics of the objects which are not visible in some cases. It is also noteworthy that all architectures seem to memorize the training data quite well and achieve high pose inlier rates. But this does not hold for the metrics on the test set, although the test scenes look similar in terms of lightning conditions and image quality. The investigation of these issues is left for future research. In \cite{bb8}, Rad \etal report an average pose inlier rate of all objects visible in the test scene of 53.5. To the best of our knowledge, this is the only work providing an inlier rate on the T-Less dataset without using depth. Note that Rad \etal use an additional two metrics to test whether a pose is an inlier. The following experiments investigate how these two different designs behave when trained with smaller datasets.
+\subsection{Incremental Training} \label{subsection:experiments_online_learning}
 
-\subsection{Incremental Learning} \label{subsection:experiments_online_learning}
-
-To propose a training strategy that makes optimal use of the little data available at the beginning of manually annotating an unannotated dataset, we investigate here whether the network should be trained incrementally or from scratch. To this end, we trained architectures 1 and 5 incrementally with datasets consisting of 25 images. Thus, we trained the network using 25 images and then continued to train it with the next set of 25 images. We repeated this process until we reached the desired number of 250 images. As we assumed that the proportion of the split of training and validation set becomes more relevant with such a small dataset, we ran one set of experiments using 70\% of the images for training (i.e. 18 images) and 30\% for validation (i.e. 7 images) and another set using a 90/10 split (22 images for training and 3 images for validation). The experiments utilizing the 70/30 split took the validation images of previous experiments into account, while the experiments of the 90/10 split did not. None of the training runs used training images of the previous experiments again.
+To propose a training strategy that makes optimal use of the little data available at the beginning of manually annotating an unannotated dataset, we investigate here whether the network should be trained incrementally or from scratch. To this end, we trained architectures 1 and 5 incrementally with datasets consisting of 25 images. Thus, we trained the network using 25 images and then continued to train it with the next set of 25 images. We repeated this process until we reached the desired number of 250 images. As we assumed that the proportion of the split of training and validation set becomes more relevant for such a small dataset, we ran one set of experiments using 70\% of the images for training (i.e. 18 images) and 30\% for validation (i.e. 7 images) and another set using a 90/10 split (22 images for training and 3 images for validation). The experiments utilizing the 70/30 split used the validation images of previous experiments for validation again, while the experiments of the 90/10 split did not. None of the training runs used training images of the previous experiments again.
 
 The reason why we created datasets of 25 images is that we deemed this a number that is quickly reachable by manual annotation. We also trained the network from scratch using 50, 100 and 250 images using a 70/30 split and compared it with the performance of the network trained incrementally with the same number of images. The smaller datasets were created by extracting images at regular intervals from the whole set. The validation images were then taken from this set at regular intervals, to ensure an optimal distribution. \fig \ref{fig:experiments_online_sratch_loss_arch1} shows the losses of the incremental training runs using architecture 1 in comparison to the runs from scratch. Due to the similarity to the loss graphs of architecture 1, the loss graphs of the experiments of architecture 5 are listed in the appendix in \fig \ref{fig:experiments_online_sratch_loss_arch5}.
 
-Although the training losses reach a similar low in all experiments, the validation losses diverge by a large margin. No incremental training run managed to reduce the validation loss below the competing losses - not even to the same level. An observation that can be made is that incremental training does not need as many epochs as shown in \fig \ref{fig:experiments_online_sratch_79_30_validation_loss_arch1}, since the graphs in \fig \ref{fig:experiments_online_sratch_90_10_validation_loss_arch1} reach similar error rates after fewer epochs. The overall appearance of the validation losses of the incremental approaches is difficult to explain. The network seems to overfit but even if the training runs had been stopped in the valleys visible in \fig \ref{fig:experiments_online_sratch_90_10_validation_loss_arch1}, there would be a large gap compared to the training from scratch, still. 
+Although the training losses reach a similar low in all experiments, the validation losses diverge by a large margin. No incremental training run managed to reduce the validation loss below the competing losses - not even to the same level. An observation that can be made is that incremental training does not need as many epochs as shown in \fig \ref{fig:experiments_online_sratch_79_30_validation_loss_arch1}, since the graphs in \fig \ref{fig:experiments_online_sratch_90_10_validation_loss_arch1} reach similar error rates after fewer epochs. 
 
-The results of the evaluation metrics of the different experiments are given in Table \ref{table:experiments_online_sratch_arch1}. The metrics were created for the respective validation set. The same table is provided for architecture 5 in the appendix (Table \ref{table:experiments_online_sratch_arch5}). The table shows that splitting the images into 90\% training data and 10\% validation data works better. But neither approach can compete with training from scratch which, depending on the metric, outperforms incremental training by a factor of 3 to 15. The numbers in the table are also reflected in Table \ref{table:experiments_online_scratch_arch1_test_set}, which provides the values of the metrics of test scene 7.
-
-We cannot give a final statement why the incremental approach results in such an inferior validation loss. We assume that there is a way to improve this method so that it reaches the same level like the training from scratch. A reason for the inconsistent loss could be the trainable batch normalization. Training the network with 50 images first and then fixing the batch normalization weights could help decrease the validation loss when further training the network with datasets of 25 images. Terminating the training process even earlier than in the experiments using the 90/10 split might give better results, as well, according to the loss graph in \fig \ref{fig:experiments_online_sratch_90_10_validation_loss_arch1}. But for now we have to recommend to train the network from scratch every time the user has manually annotated another batch of images.
+The results of the evaluation metrics of the different experiments are given in Table \ref{table:experiments_online_sratch_arch1}. The metrics were created using the validation set of the respective experiment. The same table is provided for architecture 5 in the appendix (Table \ref{table:experiments_online_sratch_arch5}). The table shows that splitting the images into 90\% training data and 10\% validation data works better. But neither approach can compete with training from scratch which, depending on the metric, outperforms incremental training by a factor of 3 to 15. The numbers in the table are also reflected in Table \ref{table:experiments_online_scratch_arch1_test_set}, which provides the values of the metrics of test scene 7.
 
 \begin{figure}[!tbp]
 	\begin{subfigure}[t]{0.4\textwidth}
@@ -410,27 +418,27 @@ incremental (50, 90/10)  & 7.4960            & 37                   & 39.9022   
 incremental (100, 90/10) & 6.7031             & 81                  & 22.8947            & 19.0050          & 23.4888  &13.6246        \\ \hline
 incremental (250, 90/10) & 5.6406             & 129                 & 14.8137            & 15.2717            & 17.5775   &18.7660      
 \end{tabular}
-\caption{The evaluation metrics set of the experiments using architecture \textbf{1} on the respective validation sets. The numbers in parentheses are the number of images, followed by the training - validation set split, if specified.}
+\caption{The evaluation metrics of the experiments using architecture \textbf{1} on the respective \textbf{validation sets}. The numbers in parentheses are the number of images, followed by the training - validation set split, if specified.}
 \label{table:experiments_online_sratch_arch1}
 \end{table}
 
 \begin{table}[]
 \centering
-\begin{tabular}{l||llllll} 
-Method   & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$  & inlier \% \\ \hline \hline 
-from scratch (250, 70/30)       & \textbf{13.0781}             & \textbf{21}                 & \textbf{47.2472}  &\textbf{69.0290}          & \textbf{70.5109}            & \textbf{1.7854}            \\ 
-incremental (250, 70/30) & 14.0937             & 9                  & 81.8304             & 120.5959           & 121.1930 & 0.3968         \\ 
-incremental (250, 90/10) & 12.9375             & 13                 & 59.70111            & 91.1354            & 93.2678   & 0.4501      
+\begin{tabular}{|l||llllll|} \hline 
+Method   & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$  & inlier \% \\ \hline \hline  \rowcolor{Gray}
+from scratch (250, 70/30)       & 13.0781             & \textbf{21}                 & \textbf{47.2472}  &\textbf{69.0290}          & \textbf{70.5109}            & \textbf{1.7854}            \\ 
+incremental (250, 70/30) & 14.0937             & 9                  & 81.8304             & 120.5959           & 121.1930 & 0.3968         \\  \rowcolor{Gray}
+incremental (250, 90/10) & \textbf{12.9375}             & 13                 & 59.70111            & 91.1354            & 93.2678   & 0.4501      \\ \hline 
 \end{tabular}
-\caption{The evaluation metrics set of the experiments using architecture \textbf{1} on test scene 7.}
+\caption{The evaluation metrics on \textbf{test scene 7} of the incremental training experiments of architecture \textbf{1}.}
 \label{table:experiments_online_scratch_arch1_test_set}
 \end{table}
 
 \subsection{Active Learning} \label{subsection:experiments_active_learning}
 
-Section \ref{subsection:active_learning} described the possibility of using the intersection over union between segmentation masks resulting from predicted poses and the masks provided with the dataset as a measure of the accuracy of the network. We used the training experiment from the previous section, in which we trained the network from scratch using 50 images. Afterwards we ran network inference for all remaining, i.e. on 1246, images. For these images we rendered the segmentation masks using the predicted poses and computed the IoU with the ground-truth segmentation masks. In the case of the Endoscopic Vision Challenge, we are provided with these masks, in the case of the T-Less dataset we rendered them ourselves. We selected the 50 images with the lowest IoU and used them for further training. We used 50 instead of 25 images to incrementally train the network to verify simultaneously if the problems described in the previous section can be compensated this way. The losses are depicted in \fig \ref{fig:experiments_active_learning}. 
+Section \ref{subsection:active_learning} described the possibility of using the intersection over union between segmentation masks resulting from predicted poses and the masks provided with the dataset as a measure of the accuracy of the network. We used the training experiment from the previous section, in which we trained the network from scratch using 50 images. Afterwards we ran network inference for all remaining, i.e. on 1246, images. For these images we rendered the segmentation masks using the predicted poses and computed the IoU with the ground-truth segmentation masks. In the case of the Endoscopic Vision Challenge, we are provided with these masks, in the case of the T-Less dataset we rendered them ourselves. 
 
-%TODO looks like this gives better results -> 
+We selected the 50 images with the lowest IoU and used them for further training. We used 50 instead of 25 images to incrementally train the network to verify simultaneously if the problems described in the previous section can be compensated this way. The losses are depicted in \fig \ref{fig:experiments_active_learning}. In contrast to training with the 50 images having the smallest IoU, training the network that was trained on 50 images already with another 50 images (these are exactly the images the 100 [scratch] training was performed on) lead to overfitting of the network. This is visible in the purple loss curve in \fig \ref{fig:experiments_active_learning_validation}. Table \ref{table:active_learning_val} shows the metrics on the respective validation sets of the experiments, while Tabel \ref{table:active_learning_test} shows the metrics on test scene 7. Using the 50 images with the smallest IoU does yield a better trained network, although not in a scale one might expect from the loss graphs.
 
 \begin{figure}[!tbp]
 	\begin{subfigure}[t]{0.4\textwidth}
@@ -440,16 +448,18 @@ Section \ref{subsection:active_learning} described the possibility of using the 
                  grid style={solid,gray!30!white},
                  axis lines=middle,
     			 xmin = 0,
-    			 xmax = 30,
+    			 xmax = 20,
     			 ymin = 0,
                  xlabel={epoch},
                  ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp4/train_loss.csv};
-      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_1/train_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_1_1/train_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_2_2/train_loss.csv};
       			\addlegendentry{100 [scratch]}
 				\addlegendentry{50 + 50 IoU}
+				\addlegendentry{50 + 50}
     			\end{axis}
 			\end{tikzpicture}
 		\caption{Training losses.}
@@ -462,27 +472,53 @@ Section \ref{subsection:active_learning} described the possibility of using the 
                  grid style={solid,gray!30!white},
                  axis lines=middle,
     			 xmin = 0,
-    			 xmax = 30,
+    			 xmax = 20,
     			 ymin = 0,
                  xlabel={epoch},
                  ylabel={loss},
                  x label style={at={(axis description cs:0.5,-0.1)},anchor=north},
                  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},]
       			\addplot[smooth,tb_color_1] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp4/val_loss.csv};
-      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_1/val_loss.csv};
+      			\addplot[smooth,tb_color_2] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_1_1/val_loss.csv};
+      			\addplot[smooth,tb_color_3] table [x=Step, y=Value, col sep=comma] {experiments/model1/exp5_2_2/val_loss.csv};
     			\end{axis}
 			\end{tikzpicture}
 		\caption{Validation losses.}
+		\label{fig:experiments_active_learning_validation}
 	\end{subfigure}
-	\caption{Training and validation losses of the active training method compared to training from scratch. The spike of the blue error curve in the left graph is where the training of the images having the smallest IoU values begins.}
+	\caption{Training and validation losses of the active training method compared to training from scratch. The spike of the blue and purple error curves in the left graph are located where the training using the new images begins.}
 	\label{fig:experiments_active_learning}
 \end{figure}
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l||llllll|} \hline
+Method            & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$  & inlier \% \\ \hline \hline \rowcolor{Gray}
+100 {[}scratch{]} & \textbf{4.3281}             & 184                 & 9.8145             & \textbf{9.3317}            & \textbf{10.1185}      & 0.3733 \\ \hline
+50 + 50 IoU       & 4.5312             & \textbf{274}                 & \textbf{9.6982}             & 14.8435           & 14.7758  & \textbf{12.5} \\ \hline \rowcolor{Gray}
+50 + 50           & 9.5859             & 7                   & 58.64372           & 18.4587           & 27.0878  &6.6666   \\ \hline      
+\end{tabular}
+\caption{Evaluation metrics of the active learning experiments on the respective \textbf{validation sets}. 50 + 50 IoU denotes the experiment of training the network incrementally with 50 images having the smallest IoU with the ground-truth segmentation masks. 50 + 50 stands for the experiment of incrementally training the network with another 50 images.}
+\label{table:active_learning_val}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l||llllll|} \hline
+Method            & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$ & inlier \% \\ \hline \hline \rowcolor{Gray}
+100 {[}scratch{]} & \textbf{13.1875}            & \textbf{13}                  & \textbf{53.0350}            & \textbf{94.7217}            & \textbf{95.9626}           & 0.0099    \\ \hline
+50 + 50 IoU       & 13.4765            & 9                   & 81.2969            & 108.1782          & 110.7770          & 0.0       \\ \hline \rowcolor{Gray}
+50 + 50           & 13.9453            & 4                   & 80.9910            & 111.1560          & 114.1225          &   \textbf{0.3968}  \\ \hline
+\end{tabular}
+\caption{The corresponding evaluation metrics on the \textbf{test scene 7} of the T-Less dataset.}
+\label{table:active_learning_test}
+\end{table}
 
 \subsection{Runtime Analysis}
 
 The approximate times of running the different architectures in inference mode on a single image can be seen in Table \ref{table:network_runtimes}. Loading the weights is amortized in these times already, i.e. inference was run on many images, otherwise it takes a lot longer to process a single image. The actual pose recovery computation took 26 ms per image. With a minimum total of 41 ms (architecture 1) and a maximum total of 105 ms (architecture 5), this system can be utilized for near-realtime pose estimation. All benchmarks were achieved by a Intel Core i7-4770 CPU running at 3.40GHz and a Nvidia Titan X grahpics card. The authors of \cite{bb8} report a similar runtime of 150 ms (for pose estimation and refinement). Brachmann \etal state in \cite{brachmann1} that their pose estimation pipeline runs for about 550 ms but their approach uses depth in contrast to our work. Pertsch's RGB-only version needs 770 ms to recover a pose, according to \cite{pertsch}.
 
-\begin{table}[t]
+\begin{table}[b]
 \centering
 \begin{tabular}{|l||llllll|}
 \hline
@@ -492,17 +528,3 @@ Inference Runtime & 15 ms & 47 ms & 21 ms & 64 ms & 79 ms & 66 ms \\  \hline
 \caption{Inference runtimes of the network architectures on a single image. These times can only be achieved when loading the weights has been amortized by running inference on many images.}
 \label{table:network_runtimes}
 \end{table}
-
-\section{Limitations}
-
-The conducted experiments underly some restrictions regarding their generalizability. Excluding networks from further experiments based on prior ones can be erroneous in some cases. It is not clear, if architectures 2 and 3 would have performed well using the incremental training approach. Due to the limited time we had to focus on a few architectures only for the incremental and active method evaluation. But given the data evidence we assume that no different outcome would have been the result.
-
-It is difficult to compare the networks' performances, as to our knowledge there exist no RGB-only baseline benchmark of the T-Less dataset. Results of more methods is necessary to be able to properly compare the accuracies.
-
-Most importantly, our goal of training the network on the Endoscopic Vision Challenge dataset was not achievable, as we were not provided with the correct 3D object models. It is difficult to tell, how the networks would have performed on this dataset, as it appears to be more challenging in terms of image quality, occlusion, etc.
-
-\section{Conclusions}
-
-%TODO summarize what has been done
-
-%TODO network can be used to predict initial positions -> rotation has to be adjusted manually

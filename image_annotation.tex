@@ -86,8 +86,7 @@ All necessary dependencies of the tool are listed below. The user needs to compi
 
 \subsection{Architecture \& Code Design}
 
-%TODO erster Satz
-\ac{6dpat} is primarily a \ac{ui} program, i.e. its purpose is to display a window and enable optical interaction for the user. Thus, we chose the \textit{\ac{mvc}} pattern as the underlying architecture. \ac{mvc} separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \ac{mvc} architecture is shown in \fig \ref{fig:mvc}. To ensure extensibility and exchangeability, the classes of the model do not know view or controller classes directly. The model only informs its observers (views that display data, for example) through indirect connections. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. The view classes only display data and handle simple user interactions that do not involve complex logic. The latter is the responsibility of the controller classes. Classes do not know implementation details of classes of other groups. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical development tool that allows placement of \ac{ui} components and linking of signals and slots without directly writing code. It is part of the standard Qt framework.
+\ac{6dpat} is primarily a \ac{ui} program, i.e. its purpose is to visually present data and enable easy interaction for the user. Thus, we chose the \textit{\ac{mvc}} pattern as the underlying architecture. \ac{mvc} separates the concerns of data management (Model), displaying data (View) and high level logic (Controller). The schematic of the \ac{mvc} architecture is shown in \fig \ref{fig:mvc}. To ensure extensibility and exchangeability, the classes of the model do not know view or controller classes directly. The model only informs its observers (views that display data, for example) through indirect connections. The indirect connections are realized via Qt's signals and slots mechanism, which is visualized in \fig \ref{fig:qt_signals_slots}. The view classes only display data and handle simple user interactions that do not involve complex logic. The latter is the responsibility of the controller classes. Classes do not know implementation details of classes of other groups. To speed up interface creation, we used \textit{Qt Designer} to layout the views. Qt Designer is a graphical development tool that allows placement of \ac{ui} components and linking of signals and slots without directly writing code. It is part of the standard Qt framework.
 
 \begin{figure}[!tbp]
        \centering
@@ -205,7 +204,7 @@ Example times of the manual annotation process (without aid of the network) are 
 
 The quality of the initial pose is crucial for the efficiency, as an accurate initial pose needs less corrections. \fig \ref{fig:6dpat_exps} shows two of the example images used for annotation. One of the reasons why the times of recovering poses vary significantly is the angle between the camera and the object. The nearly top-down view in image 0150.jpg prevents clicking correspondences along the object's $z$-axis, which is the largest dimension of the object. The mix of the top-down and sideways view in image 0350.jpg allows to click many correspondences along all axes which makes the initial pose more accurate. 
 
-The rotational discrepancy of the object on the left in the two images is a result of missing characteristics of the 3D model which are part of the real-world counterpart. This made it difficult to recover the pose properly. We neglected this error because the rotation is offset by a similar amount in all annotated images (see Appendix \ref{appendix:example_annotations}). The object model on the right has a notch at the top which prevents this rotation error. This issue is discussed further in the next section.
+The rotational discrepancy of the object on the left in the two images is a result of missing characteristics of the 3D model which are part of the real-world counterpart. This made it difficult to recover the pose properly. We neglected this error because the rotation is offset by a similar amount in all annotated images (see Appendix \ref{appendix:example_annotations}). The object model on the right has a notch at the top which prevents this rotation error. This issue is discussed further in Section \ref{section:discussion_manual_annotation_process}.
 
 \begin{figure}[!tbp]
 	\centering
@@ -214,48 +213,12 @@ The rotational discrepancy of the object on the left in the two images is a resu
     \label{fig:6dpat_correspondence_creation}
 \end{figure} 
 
-\subsection{Problems \& Difficulties} \label{section:6dpat_difficulties}
+\section{Implementation Difficulties}
 
 During the implementation of the program, multiple problems arose and complicated the development process. We summarize the most important ones and explain issues which impacted the final design.
 
 One of the major factors that prolonged the implementation process was that we used \textit{Qt3D} to realize all graphical processing at first. Qt3D is part of the main Qt framework. Qt3D's purpose is to encapsulate graphics programming to increase portability of applications including 3D graphics. The incomplete documentation and unintuitive concepts make it difficult to use without consultation. After complications still emerged in the almost completed annotation tool, the Qt3D framework was deemed unusable and omitted in favor of a native OpenGL implementation.
 
-Initially, a desired feature was to present another unannotated image after the user finishes annotating all poses in the current image. This is not feasible for multiple reasons. First of all, a user might still not be content with the poses. Selecting the next image programmatically could happen too early and thereby disrupt the annotation process of the user. The datasets can also have very distinct characteristics, which require the user to choose the next image manually. For a dataset like T-Less, many images have to be skipped due to their similarity. A network trained on one view on an object only, will likely predict inaccurate poses for a different view showing other characteristics of that object. The dataset of the Endoscopic Vision Challenge has less similar consecutive images.
-
-The diversity of available datasets (see Chapter \ref{chapter:experiments} for a selection of datasets) is also the reason why the program does not provide functionality to initialize the next poses based on the ones in the last image. This feature would imply too many assumptions on the dataset and, in the worst case, cause more work for the user. 
-
-While trying to annotate the images of the Endoscopic Vision Challenge dataset, it became clear that proper 3D models are crucial for successful annotation. To temporarily annotate the medical images, 3D surgical tools were downloaded from the internet as a replacement for the missing object models. But having a different shape and also missing the distinctive features of the real objects makes it very difficult to estimate the ground-truth pose. The influence of contradicting annotated poses during training of a network is not clear. The author of this work strongly recommends to obtain the correct 3D models before annotating the Endoscopic Vision Challenge images. The issue of the object models not fitting the segmentation mask can be seen in \fig \ref{fig:sfb_segmentation}. \fig \ref{fig:sfb_original} shows the actual image and the discrepancy between the object models and image pixels.
-
-\begin{figure}
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-    	\includegraphics[width=\linewidth]{6dpat_sfb_image}
-    	\caption{An image from the medical images dataset annotated using \ac{6dpat}. The correct rotation and translation are difficult to estimate without the correct 3D models.}
-    	\label{fig:6dpat_sfb_image}
-	\end{subfigure} 
-	\hfill
-	\begin{subfigure}[t]{0.47\textwidth}
-		\centering
-    	\includegraphics[width=\linewidth]{6dpat_sfb_segmentation}
-    	\caption{The corresponding segmentation image. The discrepancy between the segmentation masks and the object model is the clearly visible green area.}
-    	\label{fig:6dpat_sfb_segmentation}
-	\end{subfigure} 
-	\caption{Example annotations of images of the Endoscopic Vision Challenge dataset. The object model is taken from \cite{3d_scalpel_online}.}
-	\label{fig:6dpat_sfb}
-\end{figure} 
-
-A general problem of any dataset can be seen in Appendix \ref{appendix:example_annotations} in form of the rotational error of manually annotated images. If the offset is similar in all recovered poses, this might not cause any trouble. If not, a network might be trained with contradicting object coordinates. There is no simple solution to this problem. Distinct characteristics of the object models could reduce this effect significantly, like the letters on the surgical tools in the Endoscopic Vision Challenge dataset or the notch of object model 01 of the T-Less dataset.
-
 A first try to use the official Python bindings did not work to our complete satisfaction. Including the bindings in the program required complex alterations. Running Python scripts is also possible by starting a new process. Qt natively offers this functionality. Starting a new process was thus favored over including Python directly in the C++ code.
 
 The Python binding is not complete, yet. Training is not possible and a deep learning expert has to setup the network and its parameters to enable its usage in the program. The current state of the incorporation of the network is to be seen as a proof of concept that requires further development.
-
-Because the neural network is trained for one object only, the time-intensive step (proportional to the overall time needed for inference on one image) of loading the trained weights has to be performed before predicting poses for different objects. The frame of this work was to explore neural networks trained for one object only, it is therefore not known whether this overhead of loading the weights can be reduced.
-
-\subsection{Future Improvements}
-
-To provide an outlook how the program can be improved in the future, we mention solutions to some of the problems of Section \ref{section:6dpat_difficulties}. An important feature that should be implemented is allowing to move the object models around on the displayed image by dragging and rotating them using the mouse. The initial poses using the clicking procedure are already sufficiently accurate in many cases. But when the camera is looking along an axis of the object, the rotation can be far off. The user can correct these poses with the provided controls. The described editing process could profit from this functionality in terms of time needed per annotation. To provide the user with a better overview of the image and its annotated poses, a zoom option should be implemented, as well.
-
-The binding of the neural network to the program does not allow to load the weights of the net and persist this state in the memory of the computer. In case that the user wants to annotate a large dataset of just one object, they could profit from a feature allowing to keep the weights in memory instead of loading them each time the inference process is started. This way, predicting the pose for only one image could be achieved in significantly less time. Running the network to predict the pose of one object in a large amount of images amortizes the loading of the weights.
-
-Another suggested step is to fully incorporate the network in the annotation tool. This way, inexperienced users can profit from the network without the need for an expert to run the network inference. There is probably no way to automatize the setup process, as this requires knowledge neural networks. In an ideal setting, this interference can be reduced to a minimum and users are introduced to the most relevant parameters only, which they can set from within the program.

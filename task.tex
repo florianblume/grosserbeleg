@@ -5,14 +5,14 @@ Augmented reality could potentially help the surgeon by overlaying diagnostic in
 
 In recent years, major breakthroughs in computer vision, including object pose estimation, were driven by techniques from machine learning. However, these methods require a large amount of training data which is not readily available in the medical domain. The goal of this project is the development of an interactive tool for the annotation of laparoscopic surgery footage. 
 
-The user should be able to accurately annotate the 3D rotation and 3D translation of all surgical tools visible in a random surgery frame. The annotation results should be stored, the frame removed from the stack of unannotated data, and a new frame should be presented. Since a large amount of data has to be processed, the annotation process must be very effcient in design. 
+The user should be able to accurately annotate the 3D rotation and 3D translation of all surgical tools visible in a random surgery frame. The annotation results should be stored, the frame removed from the stack of unannotated data, and a new frame should be presented. Since a large amount of data has to be processed, the annotation process must be very efficient in design. 
 
 Based on previous frames already annotated, the system should propose an initialization of the 6D poses in the current frame. For this purpose the tool should include an online learning component, e.g. a CNN that learns to predict correspondences between the image and 3D models of the surgical tool.
 }
 
 \taskform[pagestyle=empty]{\taskcontent}{%
 \item Survey related literature regarding data annotation and online learning.
-\item Create interaction concepts to enable a user to annotate the 6D pose of surgical tools very efciently. The images are already annotated with segmentation masks and tool IDs. 3D models of the tools are also given.
+\item Create interaction concepts to enable a user to annotate the 6D pose of surgical tools very efficiently. The images are already annotated with segmentation masks and tool IDs. 3D models of the tools are also given.
 \item Implement an annotation tool based on the interaction concept.
 \end{itemize}
 \textbf{Optional:}

@@ -131,7 +131,7 @@ The goal of the neural network is to make the annotation process presented in Ch
     	\label{fig:semi_automatic_workflow}
 \end{figure}
 
-\subsection{Incremental Learning} \label{subsection:online_learning}
+\subsection{Incremental Training} \label{subsection:online_learning}
 
 During the annotation process, the user can train the network using the new data. Given that at the beginning likely no poses exist and the user first has to annotate a couple of images manually, we have to use the little available data as optimally as possible. One option is to fully retrain the network with all  annotated images. This procedure is called \textit{training from scratch}. It is also possible to train the network incrementally, instead. \textit{Incremental training} means that the user trains the network using the annotations that were created after the last training run. In this approach, the weights of the network are not initialized to 0 or randomly. Instead, the weights of the last training run are loaded and trained further using the new data. This method is likely to converge faster and generally needs less time to complete the training compared to training from scratch. We compare the network performance of both approaches in the next chapter.
 
