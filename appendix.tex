@@ -260,23 +260,4 @@
 	\label{fig:experiments_online_sratch_loss_arch5}
 \end{figure} 
 
-\begin{table}[]
-\centering
-\begin{tabular}{l||llllll}
-Method                   & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}$ & $e_{\text{dist}}$ & $e_{\text{pose}}$ & inliers \% \\ \hline \hline
-from scratch (25, 70/30)        & 11.5468            & 57.8933                   & 84.3733            & 13.70721           & 23.0772  &    1.33333      \\ \hline
-from scratch (50, 70/30)        & 9.2500             & 87.6600                  & 51.2956            & 18.8137           & 23.4164 & 14.0000           \\  \hline 
-from scratch (100, 70/30)       & 6.5312             & 151.2266                 & 26.1370             & 40.6087            & 41.934 &    23.3333        \\ \hline 
-from scratch (250, 70/30)       & \textbf{4.1992}             & \textbf{332.2933}                 & \textbf{4.7410}             & \textbf{9.2082}            & \textbf{9.4344} & \textbf{62.0000}            \\ \hline \hline
-incremental (50, 70/30)  & 12.6562            & 10.6250                   & 97.5586          & 48.7668           & 56.2073 & 6.2500           \\ \hline
-incremental (100, 70/30) & 11.3671            & 27.2500                  & 90.8267           & 32.6782           & 38.9909 & 3.1250           \\ \hline
-incremental (250, 70/30) & 9.3281             & 68.9375                  & 68.3927           & 34.8104          & 39.7651 &  3.7500         \\ \hline \hline 
-incremental (50, 90/20)  & 11.5625            & 5.3333                   & 97.9677           & 131.0969           & 135.8001 & 0.0000          \\ \hline 
-incremental (100, 90/10) & 11.9843             & 3.3333                 & 116.4722            & 38.5254          & 46.8544 & 0.0000         \\ \hline
-incremental (250, 90/10) & 12.7500            & 15.3333                 & 101.6921            & 107.6326            & 113.3697 & 0.0000         
-\end{tabular}
-\caption{The evaluation metrics set of the experiments using architecture \textbf{5} on the validation set. The numbers in parentheses are the number of images, followed by the training - validation set split, if specified.}
-\label{table:experiments_online_sratch_arch5}
-\end{table}
-
 \end{appendices}
