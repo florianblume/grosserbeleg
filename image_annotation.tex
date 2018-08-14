@@ -28,7 +28,7 @@ The following chapter analyzes the manual 6D pose annotation process and its pre
 	\begin{subfigure}[t]{0.47\textwidth}
 	\centering
     	\includegraphics[width=0.8\linewidth]{sfb_original}
-    	\caption{An example image from the Endoscopic Vision Challenge dataset. Image from \cite{endovis}.}
+    	\caption{An example image from the \ac{evc} dataset. Image from \cite{endovis}.}
     	\label{fig:sfb_original}
 	\end{subfigure}
 	\hfill
@@ -38,17 +38,17 @@ The following chapter analyzes the manual 6D pose annotation process and its pre
     	\caption{The corresponding segmentation mask. The colors encode the tools' classes. Image from \cite{endovis}.}
     	\label{fig:sfb_segmentation}
 	\end{subfigure}
-	\caption{An example image and its corresponding segmentation mask from the Endoscopic Vision Challenge dataset.}
+	\caption{An example image and its corresponding segmentation mask from the \ac{evc} dataset.}
 	\label{fig:sfb}
 \end{figure} 
 
 \section{Images of the Endoscopic Vision Challenge}
 
-The goal of this work is to provide a system to successfully and efficiently annotate the images of the \textit{Endoscopic Vision Challenge} \cite{endovis}. The dataset includes segmentation masks but neither object models nor pose annotations or depth images. An example image together with the corresponding segmentation mask are given in \fig \ref{fig:sfb}. Occlusion and artifacts like motion blur can occur in the images. The issues with this dataset and the obstacles preventing its complete annotation are discussed Section \ref{section:6dpat_difficulties}. 
+The goal of this work is to provide a system to successfully and efficiently annotate the images of the \ac{evc} \cite{endovis}. The dataset includes segmentation masks but neither object models nor pose annotations or depth images. An example image together with the corresponding segmentation mask are given in \fig \ref{fig:sfb}. Occlusion and artifacts like motion blur can occur in the images. The issues with this dataset and the obstacles preventing its complete annotation are discussed Section \ref{section:6dpat_difficulties}. 
 
 \section{6D Pose Annotation Tool (6D-PAT)}
 
-The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (\acp{ui}). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the Endoscopic Vision Challenge in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and is dubbed \textit{\acf{6dpat}}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. The next sections present the carved out requirements, details on the used frameworks, the program's architecture, as well as the designed pose recovery process.
+The creation of sufficient training data for neural networks can be a time-consuming and tedious process. Using non-specialized tools designed for other purposes, like 3D modeling or CAD programs, require the person creating the annotations to get accustomed to complex user interfaces (\acp{ui}). The goal of the annotation tool is to provide a system that allows easy and efficient annotation of images - images of the \ac{evc} in particular. The ground-truth poses recovered using the program can then be used to train a neural network. The program is written mainly in the language C++ and is dubbed \textit{\acf{6dpat}}. Its logo can be seen in \fig \ref{fig:6dpat_logo}. The next sections present the carved out requirements, details on the used frameworks, the program's architecture, as well as the designed pose recovery process.
 
 \subsection{Requirements}
 

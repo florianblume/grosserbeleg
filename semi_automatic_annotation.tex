@@ -7,7 +7,7 @@
     	\label{fig:network_pipeline}
 \end{figure} 
 
-To assist in the process of manual image annotation presented in Chapter \ref{chapter:manual_annotation}, we developed a neural network for the task of 6D pose estimation tailored to the characteristics of the images of the Endoscopic Vision Challenge. This chapter describes the network architecture and its variations, as well as different approaches to train the network and the resulting modified annotation procedure.
+To assist in the process of manual image annotation presented in Chapter \ref{chapter:manual_annotation}, we developed a neural network for the task of 6D pose estimation tailored to the characteristics of the \ac{evc} images. This chapter describes the network architecture and its variations, as well as different approaches to train the network and the resulting modified annotation procedure.
 
 \section{Terminology} \label{section:network_terminology}
 
@@ -60,7 +60,7 @@ The neural network and all of its functionality is implemented in Python using T
 
 \section{Network Architecture}
 
-The architecture of the network is adjusted to the problem domain of the images of the Endoscopic Vision Challenge. There is no mechanism of inferring the masks and the network expects RGB-only images without depth information. This significantly reduces the complexity of predicting the position of the object. Many contradicting predicted object coordinates can still lead to positional errors, though. \fig \ref{fig:network_pipeline} shows the processing pipeline of the network which takes the image and the segmentation image as inputs. The network processes each pixel which is part of the object according to the segmentation image and outputs the 3D coordinates. As explained in Chapter \ref{chapter:background}, we then compute the optimal pose using RANSAC and the 2D-3D correspondences.
+The architecture of the network is adjusted to the problem domain of the \ac{evc} images. There is no mechanism of inferring the masks and the network expects RGB-only images without depth information. This significantly reduces the complexity of predicting the position of the object. Many contradicting predicted object coordinates can still lead to positional errors, though. \fig \ref{fig:network_pipeline} shows the processing pipeline of the network which takes the image and the segmentation image as inputs. The network processes each pixel which is part of the object according to the segmentation image and outputs the 3D coordinates. As explained in Chapter \ref{chapter:background}, we then compute the optimal pose using RANSAC and the 2D-3D correspondences.
 
 The basic architecture that we chose for the network is called ResNet. He \etal first presented ResNet in 2015, which enabled researchers to create deeper networks than before \cite{resnet}. Two major problems arise in very deep neural networks. One is the vanishing gradients problem, which means that gradients gradually become 0 in deeper layers. A 0-gradient implies that the weights don't change anymore and the layer can't take in the information of the training examples. This problem can be targeted with batch normalization \cite{resnet}. The second problem is that making a network deeper without further adjustments can lead to an increasing training error. Adding layers to a network to increase expressivity does not directly lead to a higher accuracy. Even stacking identity layers, i.e. layers that learn the mathmatical identity function $f(x) = x$, on top of the network increases the training error. This phenomenom can be compensated with residual connections \cite{resnet}. An example of a residual connection can be seen in \fig \ref{fig:residual_connection}. Fig. \ref{fig:resnet_comparison} shows a comparison of ResNet with the architecture \textit{VGG} \cite{vgg}, which is another well known neural network design. The residual connections are clearly visible as the arcs of the rightmost architecture.
 
@@ -81,11 +81,11 @@ Since the network outputs the 3D coordinates for each pixel in the input image a
 
 \subsection{Variations} \label{section:network_variations}
 
-The problem formulation of this work demands exploration of multiple architecture designs. There are multiple reasons why. The Endoscopic Vision Challenge dataset does not provide any pose annotations at all. This means that the user likely trains the neural network with few images at first. 
+The problem formulation of this work demands exploration of multiple architecture designs. There are multiple reasons why. The \ac{evc} dataset does not provide any pose annotations at all. This means that the user likely trains the neural network with few images at first. 
 
 A very deep network with many layers might not be able to incorporate the little information optimally. Conversely, a shallower architecture might not reach the same performance as a deeper network. 
 
-A characteristic of the Endoscopic Vision Challenge dataset is that the tools have writings on them which are often not or only partly visible. A network with a large receptive field-size could tend to predict 3D coordinates based on this very distinct feature, even for pixels that are further away. This way, less prominent characteristics, that could still be used to accurately identify the object coordinate belonging to a pixel, might be disregarded and the pose correctness might drop when the letters are not visible.
+A characteristic of the \ac{evc} dataset is that the tools have writings on them which are often not or only partly visible. A network with a large receptive field-size could tend to predict 3D coordinates based on this very distinct feature, even for pixels that are further away. This way, less prominent characteristics, that could still be used to accurately identify the object coordinate belonging to a pixel, might be disregarded and the pose correctness might drop when the letters are not visible.
 
 \begin{table}[]
 \centering
@@ -122,7 +122,7 @@ The network consists of convolutional, batch normalization and pooling layers on
 
 \section{Modes of Operation} \label{section:modes_of_operation}
 
-The goal of the neural network is to make the annotation process presented in Chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this, we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training, the neural network can be used to predict poses in previously unseen images. As the network will likely make errors, the poses can be corrected afterwards using \ac{6dpat}. The improved pose predictions can serve as input to further train the network. As the dataset of the Endoscopic Vision Challenge does not provide any pose annotations, the question how to optimally train the network with a reduced set of images arises. The following sections describe different strategies which are evaluated in Chapter \ref{chapter:experiments}.
+The goal of the neural network is to make the annotation process presented in Chapter \ref{chapter:manual_annotation} faster and more efficient. To achieve this, we strove for a symbiosis between the annotation tool and the neural network. The new workflow is visualized in \fig \ref{fig:semi_automatic_workflow}. In addition to manually annotating images, the user can train the network with the annotated data. After training, the neural network can be used to predict poses in previously unseen images. As the network will likely make errors, the poses can be corrected afterwards using \ac{6dpat}. The improved pose predictions can serve as input to further train the network. As the \ac{evc} dataset does not provide any pose annotations, the question how to optimally train the network with a reduced set of images arises. The following sections describe different strategies which are evaluated in Chapter \ref{chapter:experiments}.
 
 \begin{figure}[!tbp]
 	\centering
@@ -137,7 +137,7 @@ During the annotation process, the user can train the network using the new data
 
 \subsection{Active Learning} \label{subsection:active_learning}
 
-An intuitive approach to optimally train the network with only a few images is to propose to the user to annotate images which the network does not perform well on. This gives rise to the question how to obtain an indication of the network's accuracy without any ground-truth poses. As the Endoscopic Vision Challenge dataset provides segmentation masks, a simple but direct approach is the compute the intersection over union between the given segmentation mask and a rendered mask using the inferred poses. The intersection over union is defined in the following way
+An intuitive approach to optimally train the network with only a few images is to propose to the user to annotate images which the network does not perform well on. This gives rise to the question how to obtain an indication of the network's accuracy without any ground-truth poses. As the \ac{evc} dataset provides segmentation masks, a simple but direct approach is the compute the intersection over union between the given segmentation mask and a rendered mask using the inferred poses. The intersection over union is defined in the following way
 \begin{align*}
 \text{IoU} = \frac{\sum\limits_{(i, j)} \mathbbm{1}[s_g(i, j) = q] \cdot  \mathbbm{1}[s_p(i, j) = q]}{\sum\limits_{(i, j)} \frac{\mathbbm{1}[s_g(i, j) = q] +  \mathbbm{1}[s_p(i, j) = q]}{2}}
 \end{align*}

@@ -1,4 +1,4 @@
-\documentclass[color]{tudscrreprt}
+\documentclass[english,color]{tudscrreprt}
 \usepackage{tudscrsupervisor}
 \usepackage[toc,page]{appendix}
 \usepackage{caption}
@@ -43,6 +43,7 @@
 \include{acronyms}
 
 \begin{document}
+
 \faculty{Factuly of Computer Science}
 \department{Department of Artificial Intelligence}
 \institute{Institute of Computer Vision}
@@ -64,11 +65,15 @@ Generation
 \supervisor{Dr. Dmitrij Schlesinger}
 \professor{Dr. Dmitrij Schlesinger}
 \maketitle
+
 \include{task}
+
 \begin{abstract}
-Here is an abstract. %TODO
+6D pose estimation is a field of computer vision with a wide variety of applications, for example laparoscopic surgery. By annotating the laparoscopic videos with the used instruments, this kind of surgery could be facilitated immensely. Brachmann \etal achieved outstanding results on the pose estimation task by training random forests. In the recent years, researchers started to train convolutional neural network instead, which excel at most computer vision tasks. But CNNs need large amounts of training data. We provide a symbiotic system of a novel pose annotation tool dubbed 6D-PAT and a family of neural networks trained for the task of 6D pose estimation. 6D-PAT enables users to annotate large datasets effectively and efficiently. The neural network is able to generate pose predictions which can be refined using the tool. We investigated different training schemes to make optimal use of the little data available at the beginning of the annotation process and found the training from scratch every time new data is available works best. Despite the network family suffering from inaccuracy on the T-Less test set it can be used to predict precise poses on similar images it was trained on.
 \end{abstract}
+
 \tableofcontents
+
 \include{introduction}
 \include{background}
 \include{relatedwork}
@@ -78,12 +83,17 @@ Here is an abstract. %TODO
 \include{discussion}
 \include{futureworks}
 \include{appendix}
+
 \newpage
 \thispagestyle{plain}
 \printacronyms
+
 \listoffigures
+
 \listoftables
+
 \bibliographystyle{IEEEtran}
 \bibliography{bibliography.bib}
 \include{statement_of_authorship}
+
 \end{document}

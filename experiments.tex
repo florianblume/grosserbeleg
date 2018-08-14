@@ -27,7 +27,7 @@ The following section describes the setups of the experiments conducted with the
 	\label{fig:tless_examples}
 \end{figure}
 
-The initial intention to completely annotate the medical images of the Endoscopic Vision Challenge dataset turned out to be not feasible (see Chapter \ref{chapter:manual_annotation}). Instead, we chose the T-Less dataset to conduct the experiments with. Its objects are mostly texture-less  and of rather small size, making them similar to surgical tools. Next to many human pose estimation datasets, there exist some datasets of objects, too, like \cite{next_view_dataset}, \cite{pracsys_dataset} and \cite{rigid_body_dataset}. But the objects of T-Less resemble surgical tools more than the objects of those datasets.
+The initial intention to completely annotate the medical images of the \ac{evc} dataset turned out to be not feasible (see Chapter \ref{chapter:manual_annotation}). Instead, we chose the T-Less dataset to conduct the experiments with. Its objects are mostly texture-less  and of rather small size, making them similar to surgical tools. Next to many human pose estimation datasets, there exist some datasets of objects, too, like \cite{next_view_dataset}, \cite{pracsys_dataset} and \cite{rigid_body_dataset}. But the objects of T-Less resemble surgical tools more than the objects of those datasets.
 
 The T-Less dataset was released in 2017 by Hoda\v{n} et al. \cite{tless}. It contains the object models of 30 industry-relevant real world objects. Two versions exist: one mesh of the object that was manually reconstructed using CAD software and one that was produced from RGB-D images. The 3D coordinates of the objects reflect their size in millimeters. For example, the minimum and maximum of any component of the coordinates of object model 01 are about -30 and 30. This means that the model is about 60 mm long. The objects were captured using a Primsense CARMINE 1.09, a Microsoft Kinect v2 and a Canon IXUS 950 IS. We used the photos of the Canon camera due to their quality and since we do not need depth information, which is also provided by the CARMINE sensor and the Kinect. There are 1296 images of each object in the training set of the dataset, sampled in 10 degree steps in elevation and 5 degree azimuth. 20 test scenes, consisting of 504 images each, exist as well. Those are photographs of cluttered scenes of different complexity, with sometimes more than 15 objects visible. All training and test images are annotated with the ground-truth poses of the visible objects. The authors also provide a tool set to render the objects at a given pose. \fig \ref{fig:tless_example_train} shows an example frame from the training set and \fig. \ref{fig:tless_example_test} an example frame from the test set. The training images of the other objects look similar to the depicted image. The dataset provides depth images, as well but this is irrelevant to our setting.
 
@@ -180,6 +180,36 @@ To prove our statement that the L1 loss is more suitable than the L2 loss for ou
 \end{figure} 
 
 \subsection{Architectures} \label{subsection:architectures}
+
+\begin{figure}[!tbp]
+	\centering
+	\vspace{5mm}
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{/experiments/model1/0040}
+    	\caption{Image 0045.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{/experiments/model1/0040_obj_coords_error}
+    	\caption{Image 0438.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\par\bigskip
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{/experiments/model1/0575}
+    	\caption{Image 0045.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.47\textwidth}
+		\centering
+    	\includegraphics[width=\linewidth]{/experiments/model1/0575_obj_coords_error}
+    	\caption{Image 0438.jpg, pose recovered using architecture 2.}
+	\end{subfigure}
+	\caption{Example images from test scene 7 with rendered poses recovered by the architecture mentioned in the image caption.}
+	\label{fig:appendix_architecture_comparison_example_frames}
+\end{figure}
 
 \begin{figure}[!tbp]
 	\begin{subfigure}[t]{0.4\textwidth}
@@ -448,7 +478,7 @@ Method            & $e_{\text{coord}}$ & $n_{\text{inlier}}$ & $e_{\text{angle}}
 \label{table:active_learning_val}
 \end{table}
 
-Section \ref{subsection:active_learning} described the possibility of using the intersection over union between segmentation masks resulting from predicted poses and the masks provided with the dataset as a measure of the accuracy of the network. We used the training experiment from the previous section, in which we trained the network from scratch using 50 images. Afterwards we ran network inference for all remaining, i.e. on 1246, images. For these images we rendered the segmentation masks using the predicted poses and computed the IoU with the ground-truth segmentation masks. In the case of the Endoscopic Vision Challenge, we are provided with these masks, in the case of the T-Less dataset we rendered them ourselves. 
+Section \ref{subsection:active_learning} described the possibility of using the intersection over union between segmentation masks resulting from predicted poses and the masks provided with the dataset as a measure of the accuracy of the network. We used the training experiment from the previous section, in which we trained the network from scratch using 50 images. Afterwards we ran network inference for all remaining, i.e. on 1246, images. For these images we rendered the segmentation masks using the predicted poses and computed the IoU with the ground-truth segmentation masks. In the case of \ac{evc} dataset, we are provided with these masks, in the case of the T-Less dataset we rendered them ourselves. 
 
 We selected the 50 images with the lowest IoU and used them for further training. We used 50 instead of 25 images to incrementally train the network to verify simultaneously if the problems described in the previous section can be compensated this way. The losses are depicted in \fig \ref{fig:experiments_active_learning}. In contrast to training with the 50 images having the smallest IoU, training the network that was trained on 50 images already with another 50 images (these are exactly the images the 100 [scratch] training was performed on) lead to overfitting of the network. This is visible in the purple loss curve in \fig \ref{fig:experiments_active_learning_validation}. Table \ref{table:active_learning_val} shows the metrics on the respective validation sets of the experiments, while Tabel \ref{table:active_learning_test} shows the metrics on test scene 7. Using the 50 images with the smallest IoU does yield a better trained network, although not in a scale we expected from the loss graphs. We assume that the inlier rate is not as meaningful as in the other experiments, due to the low values.
 
