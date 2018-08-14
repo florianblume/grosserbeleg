@@ -6,10 +6,14 @@ The binding of the neural network to the program does not allow to load the weig
 
 Another suggested step is to fully incorporate the network in the annotation tool. This way, inexperienced users can profit from the network without the need for an expert to run the network inference. There is probably no way to automatize the setup process, as this requires knowledge neural networks. In an ideal setting, this interference can be reduced to a minimum and users are introduced to the most relevant parameters only, which they can set from within the program.
 
-Because the neural network is trained for one object only, the time-intensive step (proportional to the overall time needed for inference on one image) of loading the trained weights has to be performed before predicting poses for different objects. The frame of this work was to explore neural networks trained for one object only, it is therefore not known whether this overhead of loading the weights can be reduced.
+Because the neural network is trained for one object only, the time-intensive step (proportional to the overall time needed for inference on one image) of loading the trained weights has to be performed before predicting poses for different objects. The frame of this work was to explore neural networks trained for one object only, it is therefore not known whether this overhead of loading the weights can be reduced but this could be subject to future research.
+
+
 
 % maybe train network on test images and try on training images
 
 % dropout nicht weiter erforscht, koennte aber gut sein, dass das overfitten verhinderbar ist, dann koennte es auch gute ergebnisse liefern, vor allem fuer das inkrementelle training
 
 % batchnorm von trainiertem netz nehmen, batch norm auf nicht lernbar setzen und das dann fuer das inkrementelle training benutzen
+
+% train deeper network
